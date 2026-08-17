@@ -13,9 +13,122 @@ Two scheduled email-outreach Routines for **M Faisal Hanif**, run on Claude Code
 | **Region** | Worldwide-remote startups | US · UK · Canada · Australia · EU (email). US only (phone) |
 | **Runs** | 08:00 Karachi (`0 3 * * *` UTC) | 10:00 Karachi (`0 5 * * *` UTC) |
 | **Produces** | **25** Gmail drafts — 5 follow-ups first, 20 new. Floor 15 | **15** email drafts + 3 call leads. Floor 10 |
-| **Budget** | 230 planned / 280 absolute | 230 planned / 290 absolute |
+| **Budget** | 280 planned / 340 absolute | 280 planned / 340 absolute |
 
 **Neither task ever sends. Both create drafts only. Faisal presses Send himself.**
+
+**Neither task commits to `main`. Each run opens a pull request** on `run/task-N-YYYY-MM-DD` for
+Faisal to read and merge. If yesterday's PR is still open, today's run branches from it rather
+than from `main`, so state chains forward whether or not it has been merged — and says so in
+capitals at the top of the report.
+
+**No person or company ever receives more than two messages: one first touch, one follow-up.**
+Every PR body carries a contact ledger proving it, and a row that would reach a third touch is
+treated as a bug in the run, not a decision.
+
+---
+
+## WHAT THE FIRST LIVE RUN TAUGHT US — 17 August 2026
+
+Both routines ran. **19 drafts against a combined target of 40**: Task 1 delivered 7 against 25,
+Task 3 delivered 12 against 15. Full reconciliation in `daily/audit-2026-08-17.md`.
+
+**The 40-a-day ceiling was never the constraint.** Task 3 derived `min(15, 40 − 7) = 15` correctly
+and then made 12 because it ran out of qualifying businesses. Neither task was throttled. So
+nothing has been learned yet about whether 40 is deliverable.
+
+Three fixes went in on 18 August:
+
+1. **Task 1 stopped sourcing far too early.** Two subagents, one direct sweep, ~118 companies
+   screened against a 230-call budget, then it declared a thin day. It also misread the subagent
+   policy as "at most 2 in the whole run" and gave up when they returned. Fixed with **eight named
+   sourcing lanes, all of which must be attempted before a thin day can be declared**, a hard
+   200-call floor before that conclusion is available, and an explicit statement that two
+   subagents is a concurrency cap rather than a total.
+2. **Task 3 tried one trade-and-city pairing per region and stopped at 12.** Fixed: **two pairings
+   per region minimum** before stopping below 15. Also a **hard 15-call cap on call-lead
+   sourcing**, which overspent to ~30 and ate the website-lead budget.
+3. **Budgets raised to 280 planned / 340 absolute on both**, at Faisal's instruction that extra
+   calls are authorised to reach the number. **The extra calls buy more lanes and more candidates,
+   never a lower evidence bar.**
+
+### And the one that mattered more than any of them
+
+**Neither run could push.** 403 "Resource not accessible by integration" on `git push` and on every
+GitHub write tool, all day, both runs. Read access worked throughout.
+
+Task 3 happened to send its tracker as a file, so 22 rows of state survived. **Task 1 did not**,
+and its suppression-list update — one status correction, five follow-up rows, two new company rows
+— died with the container.
+
+Both routine files now treat this as a **hard run failure**: push the run branch early and more
+than once, verify the remote SHA after each push, and if nothing lands, send the full state file,
+open the report in capitals, and say the next run must not be triggered. See "THE RUN NEVER
+COMMITS TO MAIN. IT OPENS A PULL REQUEST." in both.
+
+### A fourth fix, from reading the drafts themselves
+
+One 17 August email opened well — no booking calendar on a physiotherapist's appointment page —
+and then spent its second finding on *"the footer copyright still reads 2024, two years behind."*
+True, checkable, and worth nothing. **Nobody hires an engineer because of a copyright year.**
+
+Task 3's findings are now tiered, and the tiers are enforced:
+
+- **Tier A** — the revenue path. Something a customer needs to do and currently cannot: no online
+  booking, booking with no visible availability, no deposits, a menu locked in a photograph, no
+  quote request, class times that exist nowhere. **The opener must be Tier A and at least two of
+  the three findings must be.**
+- **Tier B** — conversion and trust. Supporting findings, never the opener.
+- **Tier C** — copyright years, stale pages, dead links. **Never one of the three findings.** At
+  most one subordinate clause as evidence the site is unmaintained. If three findings cannot be
+  found without reaching for Tier C, the business is not a lead — skip it.
+
+### The sixth fix, and the reason not one of the twelve emails carried a link
+
+**All fifteen concept pages were built on 17 August and none of them were ever published.** They
+existed only inside the run's container. `faisalhanif.work/p/<slug>` returned 404, the link check
+correctly refused to put a dead URL in an email, and twelve business owners received a description
+of a concept instead of the concept.
+
+The check was not the problem. **There was no publishing step at all** — hosting was assumed to be
+a manual upload Faisal would do each morning, which is not a thing that survives contact with a
+scheduled task.
+
+Now automatic, via **Netlify**: one API call per run, served at `https://p.faisalhanif.work/<slug>`,
+before any email is drafted. The run waits for the deploy to report `ready`, fetches every URL, and
+links only the ones returning 200. Setup is two environment variables and a CNAME —
+`task-3-local-business/SETUP.md` has it.
+
+**A token, not the Netlify connector.** Attaching a connector to a Routine gives the unattended run
+every tool it exposes with no permission prompt, to gain one capability. That is precisely the
+shape of the 14 August send incident. One `curl` is narrow, testable, and fails visibly.
+
+**And the one hazard worth knowing about:** a Netlify zip deploy replaces the whole site. Deploying
+only today's pages would wipe every previous day, breaking links in emails already sent. The run
+rebuilds the full accumulated set each time and refuses to deploy if the file count came out lower
+than last run's.
+
+**The 200 check stays even though publishing is automatic.** Automatic things fail silently, and
+on 17 August it was the only thing that stopped fifteen dead links going out.
+
+**And the pages are still linked, never attached.** An HTML attachment from an unknown sender is a
+standard phishing delivery method, so gateways quarantine, strip or block it, and any attachment
+raises the spam score on cold contact more than a link does. **Once somebody replies, attach
+whatever helps** — the ban is on first contact only.
+
+A fifth thing came out of reading the same draft: **it never said who was writing.** It was signed
+"Faisal Hanif / faisalhanif.work" and nothing else, so a practice manager in Eindhoven had no way
+to tell an engineer from an agency from a reseller from a scam. Every Task 3 email now carries a
+fixed credential line before the offer — *"I am a software engineer. I build booking flows, online
+ordering and payment systems, and the sites they run on, mostly for independent businesses"* — and
+is explicitly forbidden from implying he is local, claiming a team, naming a client, or quoting a
+price.
+
+And every finding now carries a named solution rather than a gesture at one:
+`WHAT IS MISSING -> WHAT IT COSTS THEM -> WHAT YOU WOULD BUILD`. Not "a quick concept" but
+*"a booking page that shows your real open slots, takes a first appointment without anyone picking
+up the phone, and drops it into the calendar you already use."* The file carries a full worked
+before-and-after of that physiotherapist email.
 
 ---
 

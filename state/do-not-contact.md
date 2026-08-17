@@ -146,12 +146,12 @@ string. Both fixed as of 7 August. **Never pass `body`.**
 
 | company_domain | email_domain | company | person | email | date | status |
 |---|---|---|---|---|---|---|
-| airweave.ai | airweave.ai | Airweave | Lennert Jansen | lennert@airweave.ai | 2026-08-02 | sent |
-| ambral.com | ambral.com | Ambral | Sam Brickman | founders@ambral.com | 2026-08-02 | sent |
-| societies.io | societies.io | Artificial Societies | James He | founders@societies.io | 2026-08-02 | sent |
-| assistant-ui.com | assistant-ui.com | assistant-ui | Simon Farshid | hello@assistant-ui.com | 2026-08-02 | sent |
+| airweave.ai | airweave.ai | Airweave | Lennert Jansen | lennert@airweave.ai | 2026-08-02 | sent, FOLLOWED_1_DRAFTED |
+| ambral.com | ambral.com | Ambral | Sam Brickman | founders@ambral.com | 2026-08-02 | sent, FOLLOWED_1_DRAFTED |
+| societies.io | societies.io | Artificial Societies | James He | founders@societies.io | 2026-08-02 | sent, FOLLOWED_1_DRAFTED |
+| assistant-ui.com | assistant-ui.com | assistant-ui | Simon Farshid | hello@assistant-ui.com | 2026-08-02 | sent, FOLLOWED_1_DRAFTED |
 | avrea.com | avrea.com | Avrea | Hannu Valtonen | hello@avrea.com | 2026-08-02 | BOUNCED |
-| getbalance.ai | getbalance.ai | Balance | Gus Levinson | founders@getbalance.ai | 2026-08-02 | sent |
+| getbalance.ai | getbalance.ai | Balance | Gus Levinson | founders@getbalance.ai | 2026-08-02 | sent, FOLLOWED_1_DRAFTED |
 | beam.cloud | beam.cloud | Beam | Eli Mernit | founders@beam.cloud | 2026-08-02 | sent |
 | bloom.diy | bloom.diy | Bloom | David Oort Alonso | founders@bloom.diy | 2026-08-02 | sent |
 | boundaryml.com | boundaryml.com | Boundary | Vaibhav Gupta | founders@boundaryml.com | 2026-08-02 | sent |
@@ -167,7 +167,7 @@ string. Both fixed as of 7 August. **Never pass `body`.**
 | graphify.com | gmail.com (freemail) | Graphify Labs | Safi Shamsi | safishamsi98@gmail.com | 2026-08-02 | sent |
 | helix-db.com | helix-db.com | HelixDB | George Curtis | george@helix-db.com | 2026-08-02 | sent |
 | heytelo.com | heytelo.com | Hey Telo | Christopher Grittner | info@heytelo.com | 2026-08-14 | sent, FOLLOWED_1_DRAFTED |
-| hugentic.ai | hugentic.ai | Hugentic | Mark Bird | hello@hugentic.ai | 2026-08-13 | sent, FOLLOWED_1_DRAFTED |
+| hugentic.ai | hugentic.ai | Hugentic | Mark Bird | hello@hugentic.ai | 2026-08-13 | sent, REPLIED |
 | hyperprobe.co | hypertest.co | HyperProbe | Karan Raina | karan@hypertest.co | 2026-08-02 | sent |
 | ix.dev | ix.dev | Indexable | Andrew Gazelka | andrew@ix.dev | 2026-08-14 | sent, FOLLOWED_1_DRAFTED |
 | inkbox.ai | inkbox.ai | Inkbox | Ray Liao | ray@inkbox.ai | 2026-08-14 | sent, FOLLOWED_1_DRAFTED |
@@ -404,23 +404,53 @@ string. Both fixed as of 7 August. **Never pass `body`.**
 | omnara.com | gmail.com (freemail) | Omnara | Kartik Sarangmath | kartiksarangmath@gmail.com | 2026-08-07 | drafted |
 | runanywhere.ai | runanywhere.ai | RunAnywhere | Sanchit Monga | san@runanywhere.ai | 2026-08-14 | drafted |
 
-## PENDING CORRECTION — do this before the first scheduled run
+## RECOVERED FROM THE LOST 17 AUGUST RUN — read this before the next run
 
-**`hello@hugentic.ai` (Mark Bird) replied at 13:04 UTC on 14 August.** That is the third genuine
-reply this campaign has produced, after Zentio and Storepass. His row above still reads
-`sent, FOLLOWED_1_DRAFTED`.
+The 17 August Task 1 run made four changes to this file and **could not push them**. The container
+was discarded, so they were reconstructed here by hand on 18 August from the run report and the
+Gmail drafts. Three of the four are done. **One is still outstanding.**
 
-**Change it to `sent, REPLIED`**, or the follow-up logic will eventually reach him — and following
-up on a thread with a real human reply in it is the one thing this campaign never does.
+**Applied:**
 
-**Also worth reconciling before the first run:** a 13 August audit found the 7 August rows reading
-`drafted` while Gmail showed them in Sent. There are **25** such rows in the table today (the
-twenty-sixth, Storepass, has since moved to `sent, REPLIED (declined)`).
+- `hello@hugentic.ai` (Mark Bird) moved to `sent, REPLIED`. He replied at 13:04 UTC on 14 August
+  and this campaign never follows up a thread with a real human reply in it.
+- Five rows moved to `sent, FOLLOWED_1_DRAFTED` — **Airweave, Ambral, Artificial Societies,
+  assistant-ui, Balance**. These are the 2 August cohort the run drafted follow-ups to at 08:13 on
+  17 August. The drafts exist in Gmail and may or may not have been sent yet, which is exactly what
+  that status means.
 
-Separately, **10 rows read `sent, FOLLOWED_1_DRAFTED`** — Hey Telo, Hugentic, Indexable, Inkbox,
-Limrun, Meticulate, Moss, nao Labs, o11 and Onlook. That status means a follow-up draft exists
-but may never have been sent. Check Gmail and move each to `sent, FOLLOWED_1` if it went, or
-leave it if it did not.
+**STILL OUTSTANDING — two rows are missing and this file is not safe until they are added:**
+
+The run created first-touch drafts to **Gooseworks** and **Uplift AI** at 08:27 on 17 August. Both
+drafts are in Gmail. **Neither company is recorded below.** Until they are, the next run can source
+either one again and send a second first-touch email.
+
+Open the two drafts, read the `To:` addresses, and append rows in this shape:
+
+```
+| gooseworks.ai | <email domain> | Gooseworks | Himanshu <surname> | <address> | 2026-08-17 | drafted |
+| upliftai.org | upliftai.org | Uplift AI | Zaid Qureshi | <address> | 2026-08-17 | drafted |
+```
+
+Two notes taken from the run's own account, so the rows are right:
+
+- **Gooseworks' email domain is not its website domain.** The address the run verified sits on
+  `athina.ai` while the company being pitched is `gooseworks.ai`. Both belong in the row and both
+  get blocked — that is what the two-domain column layout is for.
+- Uplift AI appears in the "From 14 August" rejected section below as a near miss, dropped then for
+  publishing only `founders@upliftai.org`. The 17 August run found a personal address for Zaid
+  Qureshi. **The near-miss note below is now out of date; the row above supersedes it.**
+
+## Still worth reconciling before the next run
+
+A 13 August audit found the 7 August rows reading `drafted` while Gmail showed them in Sent. There
+are **25** such rows in the table today (the twenty-sixth, Storepass, has since moved to
+`sent, REPLIED (declined)`).
+
+Separately, **10 rows read `sent, FOLLOWED_1_DRAFTED`** — Hey Telo, Hugentic (now REPLIED),
+Indexable, Inkbox, Limrun, Meticulate, Moss, nao Labs, o11 and Onlook, plus the five added above.
+That status means a follow-up draft exists but may never have been sent. Check Gmail and move each
+to `sent, FOLLOWED_1` if it went, or leave it if it did not.
 
 Neither drift changes who is blocked — every one of those statuses blocks — but both make the
 follow-up eligibility set wrong.

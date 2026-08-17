@@ -107,6 +107,33 @@ the first two hundred words a stranger reads.
 **Do not resurrect the "four years" version.** The 6 August run used an older paragraph that said
 four years, which is both wrong and was not what he approved.
 
+## The credential line — Task 3 only, fixed, in every email
+
+Small business owners do not know who Faisal is and have no reason to guess generously. One
+sentence, immediately before the concept offer, is the cheapest trust in the whole email:
+
+> **I am a software engineer. I build booking flows, online ordering and payment systems, and the
+> sites they run on, mostly for independent businesses.**
+
+Only the middle clause moves, to match what the email is actually proposing — ordering and menus,
+quote and enquiry systems, or a full build for a lead with no site at all.
+
+**It never implies he is local.** He is in Lahore. The email does not state his location and does
+not hide it; if they ask, the answer is straightforward. **It never claims a team**, never names a
+client or a metric, and never states a price.
+
+Sign-off stays compact underneath it:
+
+```
+Faisal Hanif
+Software engineer
+faisalhanif.work
+```
+
+Task 1 is different and does **not** use this line — a founder reading a Task 1 email already
+knows they are being approached by an engineer about engineering work, and the fixed positioning
+paragraph in `task-1-startup-outreach/ROUTINE-INSTRUCTIONS.md` covers it.
+
 ## Words that are banned in outreach copy
 
 No em dashes anywhere. No exclamation marks. And none of these:

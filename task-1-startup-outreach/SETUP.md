@@ -36,7 +36,35 @@ first scheduled run:
 | **Schedule** | `0 3 * * *` | Cron is **UTC**. Faisal is UTC+5 with no daylight saving, so this is **08:00 Karachi**. Task 3 must stay two hours behind it. |
 | **Model** | **Sonnet** | Not Opus. See below. |
 | **Connectors** | **Gmail only** | See below. |
-| **Auto-fix pull requests** | **OFF** | This routine's commits are data, not code. Nothing here needs a build fixed. |
+| **Auto-fix pull requests** | **OFF** | This routine opens its own PR with a written body. Auto-fix watches CI on PRs and there is no CI here — leaving it on just adds noise. |
+
+### The GitHub App needs WRITE access, and on 17 August it did not have it
+
+Both runs got `403 Resource not accessible by integration` on every write path while reading fine
+all day. The routine cannot fix this from its side.
+
+`github.com/settings/installations` → **Claude** → **Configure**. Check two things:
+
+- **Repository access** includes `outreach-schedule`.
+- **Permissions → Contents** reads **Read and write**, not Read-only. If a pending permission
+  request is shown at the top of that page, approve it — a write scope added after install stays
+  dormant until you do.
+
+Then trigger one run by hand and confirm the **branch and the pull request** appear on GitHub
+before trusting the schedule. **A run that cannot push loses its suppression-list update, and the
+next run re-contacts everyone it drafted.**
+
+### Your part of the loop: merge the PR
+
+Each run now opens a PR on `run/task-1-YYYY-MM-DD` instead of committing to `main`. Read the body
+— it carries the numbers, the deliverability block, the contact ledger, who was contacted, and
+every state change — then merge it.
+
+**Merging is not optional housekeeping.** If you leave PRs open, they stack. The runs handle it:
+each one checks for unmerged run branches and, finding any, branches from the most recent rather
+than from `main`, so the suppression list still chains forward correctly. But the report will tell
+you in capitals how many are outstanding, and the longer the chain the harder any single PR is to
+read. **Merge daily.**
 
 ### Paste the instructions in full — do not point at the file
 

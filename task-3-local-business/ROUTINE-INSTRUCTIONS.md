@@ -143,8 +143,13 @@ content. If unreadable exceeds a quarter of pages attempted, open the report wit
 
 ## The budget
 
-**Planned: 230 tool calls. Absolute ceiling: 290.** Ten are reserved in either case for the
+**Planned: 280 tool calls. Absolute ceiling: 340.** Ten are reserved in either case for the
 tracker write and the packet write.
+
+**Raised again on 18 August.** On the 17th this task delivered 12 against a target of 15 — above
+the floor, but short. Faisal's instruction is that reaching the number matters and extra calls are
+authorised to reach it. **THE EXTRA CALLS BUY MORE CANDIDATES, NOT A LOWER EVIDENCE BAR.** Nothing
+in the audit rules, the address rules or the spam test moves.
 
 Raised from 110/140 on 17 August, when the daily target went from 7 website leads to 15. The
 arithmetic: roughly six to eight calls go on the audit for each business, plus the discovery
@@ -158,11 +163,17 @@ out partway through and reported a failure that was really an under-resourcing �
 fine, the allowance was wrong. Leaving it at 110 while doubling the target would have reproduced
 exactly that.
 
-Work to 230. If you reach it and are **still short of fifteen website leads and three call
-leads**, you may continue to 290 — but only on calls that will plausibly close the gap: screening
+Work to 280. If you reach it and are **still short of fifteen website leads and three call
+leads**, you may continue to 340 — but only on calls that will plausibly close the gap: screening
 a new candidate, auditing a site, finding a published address, opening a directory profile,
 creating a draft. **Not** on retrying something that already failed, and **not** on a
-trade-and-city pairing that has produced nothing. **290 is absolute and is never crossed.**
+trade-and-city pairing that has produced nothing. **340 is absolute and is never crossed.**
+
+*** YOU MAY NOT STOP BELOW 15 UNTIL YOU HAVE TRIED AT LEAST TWO TRADE-AND-CITY PAIRINGS IN EVERY
+ONE OF THE FIVE REGIONS. *** On 17 August the run tried one pairing per region, got 3/3/2/2/2, and
+stopped at 12. One Canadian candidate was correctly rejected for being too polished and two
+Australian ones were lost to Cloudflare — all correct individual calls, but the answer to a thin
+pairing is a second pairing in that region, not a shortfall. Report both pairings per region.
 
 *** THE OVERRUN BUYS MORE SEARCHING, NEVER A LOWER BAR. *** It does not permit a guessed address
 or phone number, an unverified claim about someone's website, a relaxed filter, or a shortened
@@ -182,8 +193,11 @@ detail.
 ## Spend the budget in an order that protects the call leads
 
 1. Preflight and the state reads.
-2. **The three no-website call leads.** Under ten calls in total, and they count against no
-   sending ceiling.
+2. **The three no-website call leads. HARD CAP: 15 CALLS.** On 17 August this section consumed
+   roughly 30 calls against a ~10 budget before landing 3 leads, and that overspend came straight
+   out of the website-lead budget. **At 15 calls you stop and take what you have** — two call
+   leads, or one, or none. They count against no sending ceiling and they are worth far less than
+   the two website drafts that 15 extra calls would have bought. Report the count you spent.
 3. The fifteen website leads with whatever remains.
 
 On 14 August the run went in the wrong order and hit the ceiling during the audits, delivering
@@ -458,40 +472,80 @@ Tested 13 August against three real small-business sites:
 | Page speed, Core Web Vitals, Lighthouse scores | **NOT DETERMINABLE. Never quote a number.** |
 | Traffic, rankings, conversion rate, revenue | **NOT DETERMINABLE. Never estimate one.** |
 
-#### The improvement lanes — pick the two or three that actually apply
+#### THE THREE TIERS. THE OPENER MUST BE TIER A, AND AT LEAST TWO OF YOUR THREE FINDINGS MUST BE.
 
-Do not run down this list mechanically. Pick what genuinely fits **that trade and that business**,
-and say why it fits them specifically.
+This is the most important section in the file and it was rewritten on 18 August because the
+17 August emails failed it. One of them opened well — no booking calendar on the appointment page —
+and then spent its second finding on *"the footer copyright still reads 2024, two years behind."*
 
-**1. Booking and appointments.** The single highest-value lane for barbers, salons, dentists,
-physiotherapists, driving schools, med spas, tattoo studios and photographers. Look for: no
-booking at all, "call to book" only, a third-party widget that no longer loads, a booking link
-that leaves their domain entirely, or no way to see availability. The business case is that
-after-hours bookings are the ones a phone-only shop loses, and they never find out they lost them.
+**No business owner has ever hired anyone because of a copyright year.** It is true, it is
+checkable, and it is worth nothing. Faisal is a software engineer, not a proofreader, and an email
+that spends a third of its length on a date in a footer tells the owner he has nothing bigger to
+say.
 
-**2. Payments and deposits.** Deposits on no-show-prone appointments, online ordering for cafes
-and bakeries, invoices and card payment for trades. Look for: no payment path, cash-only notes,
-a dead payment vendor link, or a PDF price list with no way to act on it.
+**TIER A — the revenue path. Something a customer needs to do and currently cannot.**
+This is what the email is about. Everything else is support.
 
-**3. Ordering, menus and inventory.** Restaurants, cafes, bakeries, florists. A menu published as
-a photograph or a PDF cannot be read by a phone or by search engines, and cannot be changed
-without someone remaking the file. That is a business-logic problem, not a design problem.
+  - No online booking at all, or "call us to book"
+  - Booking exists but shows no availability, so they still have to phone to find out
+  - Booking leaves their domain entirely for a third-party page that looks nothing like them
+  - No deposit or prepayment on appointments a no-show costs them real money on
+  - No online ordering where the trade obviously supports it
+  - The menu, price list or service list is a photograph or a PDF — unreadable on a phone,
+    invisible to search, and impossible to change without remaking the file
+  - No quote request for a trade that sells by quote
+  - A contact form with no confirmation, so the customer does not know it sent
+  - Class, session or opening times that exist nowhere on the site
+  - The revenue path specifically broken on mobile — the booking or ordering step, not the
+    homepage
+  - A dead or misdirected vendor link anywhere on that path
 
-**4. Getting found and getting in touch.** Missing or wrong opening hours, no address on the page,
-no map, a contact form with no confirmation, no email published anywhere. Every one of these is a
-customer who wanted to reach them and could not.
+**TIER B — conversion and trust. Supporting findings, never the opener.**
 
-**5. Structure and content the business actually needs.** No services page, no prices, no gallery
-for a trade where the work is visual, no reviews on their own site, no page for the one service
-they clearly make most of their money from.
+  - No prices anywhere for a trade where customers expect them
+  - No services page, or services buried in prose
+  - No gallery for a trade where the work is visual
+  - Reviews exist on Google but nowhere on their own site
+  - No map, no address, or hours that contradict each other across pages
+  - A layout so dated that it undermines trust in a trade where trust is the sale
 
-**6. Design and trust.** Dated layout, unreadable type on a phone, stock photography where their
-own work exists, a footer year that is wrong. This lane is real but it is the **weakest opener**
-— lead with it only when nothing above applies, because "your site looks old" is the thing every
-other agency also says.
+**TIER C — maintenance signals. NEVER ONE OF THE THREE FINDINGS.**
 
-**7. Build the thing they do not have.** Where the whole category is absent — no online presence
-for a service that clearly needs one — the pitch is the system, not the tweak.
+  Copyright year. A stale seasonal page. A dead social link. A 404 on a minor page. A missing
+  viewport tag stated on its own.
+
+  **You may reference at most ONE of these, once, in a subordinate clause, as evidence that nobody
+  is currently maintaining the site.** "The site has not been touched in a while — the footer still
+  says 2024 — and it shows in the booking flow" is acceptable. A whole sentence about the footer is
+  not. If you cannot find three findings without reaching for Tier C, **the business is not a lead.
+  Skip it and find another one.** That is what the raised budget is for.
+
+#### EVERY FINDING NEEDS A SOLUTION ATTACHED. A PROBLEM LIST IS NOT A PITCH.
+
+The 17 August emails named problems and then offered, generically, "a quick concept showing what
+these would look like fixed." Faisal's instruction on 18 August: the draft has to carry **concrete
+and solid solutions**, not observations.
+
+So every Tier A finding is written as a triplet:
+
+```
+WHAT IS MISSING  ->  WHAT IT COSTS THEM  ->  WHAT YOU WOULD BUILD
+```
+
+Be specific about the third part. Name the thing.
+
+  - Not "improve your booking" but **"a booking page that shows real open slots, takes the first
+    appointment without a phone call, and drops it straight into whatever calendar you already
+    use."**
+  - Not "your menu needs work" but **"the menu as a real page you can edit yourself in a minute,
+    readable on a phone, and picked up by search when someone looks for what you sell."**
+  - Not "add payments" but **"a deposit taken at the point of booking, so a no-show costs them
+    something and not you."**
+  - Not "the site is not mobile friendly" but **"the booking step rebuilt to work with one thumb,
+    since that is how most people will reach it."**
+
+**Never quantify.** No percentages, no revenue figures, no speed scores. Describe the mechanism
+and the build. The specificity has to come from knowing *their* site, not from a number.
 
 #### The rules that keep this credible
 
@@ -586,24 +640,104 @@ not. Tasteful and restrained.
 
 Small line at the bottom: `Concept prepared by Faisal Hanif - faisalhanif.work`.
 
-**Commit the HTML into `previews/<YYYY-MM-DD>/<slug>.html` in this repo.** That commit is the
-delivery mechanism and the only one — a scheduled run has no way to hand a file to Faisal
-directly, so do not look for one. Confirm the commit landed and name the paths in the packet.
+**Commit the HTML into `previews/<YYYY-MM-DD>/<slug>.html` on the run branch.** That is the record.
+It is NOT what makes the page reachable — see the next step, which is the one that matters.
 
-### Then check the link, before drafting anything
+---
 
-Fetch `https://faisalhanif.work/p/<slug>` and read the status.
+## Step 4b — PUBLISH THE PAGES TO NETLIFY. THIS IS THE STEP THAT WAS MISSING.
+
+*** ON 17 AUGUST ALL FIFTEEN PAGES WERE BUILT AND NONE WERE PUBLISHED, SO EVERY SINGLE EMAIL WENT
+OUT WITHOUT A LINK. ***
+
+The pages existed only inside the container. The public URL returned 404 because nothing had ever
+been uploaded there, the link check correctly refused to put a dead URL in an email, and twelve
+business owners got a description of a concept instead of the concept.
+
+**The link check was not the problem. The missing publish step was.** Do not weaken the check.
+
+### The mechanism: one API call to Netlify
+
+Two environment variables carry it:
+
+```
+NETLIFY_TOKEN     a Netlify personal access token
+NETLIFY_SITE_ID   the site's API ID
+```
+
+If either is absent, say so plainly in the report and continue — every email ships link-free, which
+is correct behaviour and not an error.
+
+*** A NETLIFY ZIP DEPLOY REPLACES THE ENTIRE SITE. THIS IS THE ONE WAY TO GET THIS BADLY WRONG. ***
+
+If you zip only today's fifteen pages and deploy, **every page from every previous day disappears**
+— and those URLs are sitting in emails already in people's inboxes. You would be retroactively
+creating the exact 14 August failure across the whole campaign history.
+
+So the zip is always the **accumulated set**: every page in `previews/**` across all dates in the
+repo, flattened to one file per slug, plus today's. Slugs are unique because one business gets one
+email ever, so a flat namespace is safe.
+
+```bash
+# 1. build the FULL site directory from repo history plus today
+mkdir -p /tmp/site
+find previews -name '*.html' -exec cp {} /tmp/site/ \;      # every previous day
+cp /mnt/user-data/outputs/*.html /tmp/site/                 # today
+
+# 2. sanity-check the count BEFORE deploying
+ls /tmp/site/*.html | wc -l
+# This number must be >= the number of pages the previous run reported deploying.
+# IF IT IS LOWER, DO NOT DEPLOY. Report it in capitals and ship every email link-free.
+
+# 3. one zip, one deploy
+cd /tmp/site && zip -qr /tmp/site.zip .
+curl -sS -X POST \
+  -H "Authorization: Bearer $NETLIFY_TOKEN" \
+  -H "Content-Type: application/zip" \
+  --data-binary @/tmp/site.zip \
+  "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys"
+```
+
+The response is JSON carrying `id`, `state` and `ssl_url`. **Poll until ready:**
+
+```bash
+curl -sS -H "Authorization: Bearer $NETLIFY_TOKEN" \
+  "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys/<DEPLOY_ID>"
+```
+
+`state` goes `uploading` -> `processing` -> **`ready`**. Usually five to twenty seconds. Poll at
+most six times, then stop waiting and ship link-free.
+
+**Report the deploy id, the final state, and the page count deployed.** Every run.
+
+### Then verify every URL individually, and only then draft
+
+Deploy state `ready` is Netlify's opinion. The link check is yours, and it stays.
+
+  1. Fetch `https://p.faisalhanif.work/<slug>` for every lead. One fetch each.
+  2. 200 -> that email carries its link.
+  3. Anything else -> that email ships link-free. Not the others. **Per lead, not per run.**
 
 > **Never put a URL in an email that this run has not fetched and confirmed returns HTTP 200.**
-> On 14 August four businesses received emails linking to pages that did not exist. If you cannot
-> verify a URL resolves, the email ships without it. No exceptions.
+> On 14 August four businesses received emails linking to pages that did not exist. This rule does
+> not relax because publishing is now automatic. **Automatic things fail silently**, which is
+> precisely why the check exists — on 17 August it was the only thing that stopped fifteen dead
+> links going out.
 
-**On day one, and on any morning Faisal has not yet uploaded that day's pages, every email will
-ship without a link. That is correct behaviour, not a failure**, and you should say so plainly
-rather than treating it as an error. The pages are generated the same morning the email is
-drafted, so unless he uploaded them before the run there is nothing at that URL yet.
+**Record the exact URL checked and the result for every lead.** The packet reports both, split into
+emails carrying a verified link and emails that shipped without one.
 
-**Record the exact URL checked and the result for every lead.** The packet has to report both.
+### If any of it is not set up
+
+Missing token, missing site id, `api.netlify.com` unreachable from this environment, or the deploy
+never reaching `ready` — all produce the same outcome: **every email ships in its link-free form,
+offering to send the concept instead.** Say plainly at the top of the report which of them it was,
+and carry on. **This is a correct, safe day, not a failed run.** Mailing a dead link to fifteen
+strangers is strictly worse.
+
+**Network egress to `api.netlify.com` has not been tested from this environment.** On the first run
+that has the token, test it once, record ALIVE or DEAD with the exact error under tool health, and
+do not retry beyond twice.
 
 ---
 
@@ -620,12 +754,29 @@ not attempt a workaround and **never put a "From:" line in the body.**
 
 ### Shape
 
-**130 to 170 words. No em dashes anywhere. No attachments, ever** — attachments on cold email are
-a serious spam signal, considerably stronger than a link.
+**150 to 200 words. No em dashes anywhere.**
 
-Raised from 120–160 on 17 August to make room for the business-impact line below. **It is a
-ceiling, not a target.** A 135-word email that is entirely specific beats a 170-word one padded
-to fill the range.
+*** NO ATTACHMENTS ON A FIRST-TOUCH EMAIL. EVER. THE CONCEPT GOES AS A LINK. ***
+
+This gets questioned every time somebody sees a link-free email and reasonably asks why the page
+was not just attached. The answer is specific rather than stylistic:
+
+  - **An HTML attachment from an unknown sender is one of the highest-risk objects in email.** It
+    is a standard phishing delivery method, so Gmail, Outlook and most corporate gateways
+    quarantine, strip or hard-block it. A meaningful share of the fifteen would never arrive at
+    all, and the sender domain takes the reputation hit for every one that gets flagged.
+  - **Any attachment on a cold first contact raises the spam score more than a link does.** That is
+    the opposite of the intuition, and it is why the rule exists.
+  - **A link can be verified before sending. An attachment cannot.** The 200 check is the only
+    thing standing between Faisal and another 14 August.
+
+**Once somebody replies, all of this stops applying.** A reply is permission. Attach the HTML, the
+PDF, whatever helps — that thread is warm and no longer subject to first-contact filtering. The
+ban is on the first message only.
+
+Raised on 18 August to make room for the solution line and the credential line. **It is a ceiling,
+not a target.** A 160-word email that names a real missing system and what you would build beats a
+200-word one padded to fill the range.
 
 ### The spam test — apply it to every draft before you create it
 
@@ -633,65 +784,212 @@ At 40 sends a day from a domain first used this month, one templated email costs
 skipped lead. **If a draft fails any of these, do not create it. Skip the business and say so in
 the report.**
 
-1. **Would this sentence be false about any other business in the same trade?** If the opening two
+1. **Is the opening finding Tier A?** A missing or broken revenue path — something a customer
+   needs to do and cannot. If it is a copyright year, a stale page or a dead link, the email fails
+   here. Delete it and re-audit, or skip the business.
+2. **Are at least two of the three findings Tier A?** If not, this business did not have enough
+   wrong with it to be worth writing to. Skip it.
+3. **Does the email name a specific thing you would build?** Not "improvements", not "I can help".
+   The actual system, in one sentence, in their terms.
+4. **Would this sentence be false about any other business in the same trade?** If the opening two
    lines would read the same for any barber in any city, they are not findings, they are a
    template. Delete and re-audit.
-2. **Is every claim in it something the run actually fetched?** Not inferred, not assumed from the
+5. **Is every claim in it something the run actually fetched?** Not inferred, not assumed from the
    trade, not remembered from another site.
-3. **Are there numbers in it that were not read off their page?** Any invented percentage,
+6. **Are there numbers in it that were not read off their page?** Any invented percentage,
    revenue figure, traffic estimate or speed score fails outright.
-4. **Is there exactly one call to action?** Two asks in a cold email reads as a funnel.
-5. **Does it contain any of the banned words** in `profile/faisal-outreach-profile.md`? No
+7. **Is there exactly one call to action?** Two asks in a cold email reads as a funnel.
+8. **Does it contain any of the banned words** in `profile/faisal-outreach-profile.md`? No
    "excited", "thrilled", "reach out", "leverage", "game-changer", "I hope this email finds you
    well", "I came across your company".
-6. **Does the opt-out line survive?** It is never dropped for length.
-7. **Is there a real person or a real shop behind the address**, quoted from a page you opened?
+9. **Does the opt-out line survive?** It is never dropped for length.
+10. **Is there a real person or a real shop behind the address**, quoted from a page you opened?
 
 A day where four candidates fail this test and eleven ship is a **good** day. The eleven are
-better protected because the four did not go.
+better protected because the four did not go. **Report which numbered check each dropped candidate
+failed** — if checks 1 and 2 are the top reason all week, the trade-and-city rotation is surfacing
+businesses whose sites are basically fine, and the rotation needs changing.
 
-**Subject:** specific and plain. `Your booking links on <business>`, `Quick note about <business>
-on mobile`. **Never** "Website redesign" or anything else that reads like a mass mailer.
+**Subject:** specific and plain, and about the missing system rather than the site. `Booking a
+first appointment on <domain>`, `Taking deposits on <business>`, `Your menu on a phone`.
+**Never** "Website redesign", "Quick question", or anything else that reads like a mass mailer.
 
-**First two lines:** one concrete, true observation about **their** site. This is effectively the
-whole email; everything after it is supporting material. **If the observation is not specific
-enough that the owner could check it in a minute, the email is not ready.**
+**First two lines — the Tier A finding.** One concrete, true observation about a thing a customer
+needs to do on their site and currently cannot. This is effectively the whole email. **If the
+observation is not specific enough that the owner could check it in a minute, the email is not
+ready. If it is not Tier A, the email is not ready either.**
 
-**Then** the other two findings, briefly.
+**Then** the other two findings, briefly. **At least one of them must also be Tier A.** No sentence
+about a copyright year, a stale page or a dead social link — at most a subordinate clause, once,
+and only as evidence the site is unmaintained.
 
-**Then one line on what it means for the business, not for the website.** This is the sentence
-that separates an engineer from an agency mailshot, and it is the one thing that changed on
-17 August. Name the mechanism, never a magnitude:
+**Then one line on what it costs the business.** Name the mechanism, never a magnitude:
 
 - Good: *"Anyone deciding at nine in the evening has no way to book, so they either ring in the
   morning or they book somewhere else."*
 - Good: *"The menu is a photograph, so it does not come up in search and you have to remake the
   image every time a price moves."*
 - **Banned:** *"You are losing 30 percent of bookings."* *"This could double your revenue."*
-  Any invented percentage, speed score, or traffic figure. One of those in the email makes the
-  three true findings above it worthless.
+  Any invented percentage, speed score, or traffic figure. One of those makes the three true
+  findings above it worthless.
 
-**Then one line offering to fix it**, and this line has two forms:
+**Then the solution, named specifically.** This is the line that was missing before 18 August and
+it is the reason the emails read as complaints rather than proposals. Say what you would build,
+in their terms, in one sentence:
+
+> *"The fix is a booking page that shows your real open slots, takes a first appointment without
+> anyone picking up the phone, and drops it into the calendar you already use."*
+
+Not "I can help with that". Not "improvements to your booking". **The thing.**
+
+*** THEN THE CREDENTIAL LINE. IT IS FIXED, IT IS NOT OPTIONAL, AND IT GOES IN EVERY EMAIL. ***
+
+Faisal's instruction, 18 August: the 17 August drafts left the recipient with no idea who was
+writing. A stranger listed problems with their website, offered to fix them, and signed off with a
+name and a URL. **A small business owner reading that cannot tell whether it is a designer, an
+agency, a reseller, a student, or a scam** — and the natural default assumption for an unsolicited
+website email is the worst one on that list.
+
+So say plainly what he is, immediately before the offer, in these words:
+
+> **I am a software engineer. I build booking flows, online ordering and payment systems, and the
+> sites they run on, mostly for independent businesses.**
+
+That sentence is doing three things at once and all three matter:
+
+  1. **It answers "who is this".** An engineer, not a marketer and not a design agency.
+  2. **It explains why the findings were the findings.** Someone who builds booking systems
+     notices a missing booking system. The email suddenly reads as competence rather than
+     fault-finding.
+  3. **It scopes what he does.** "Independent businesses" tells them they are the customer, not an
+     afterthought between enterprise contracts.
+
+**Keep it to one sentence and do not decorate it.** No years of experience, no client count, no
+technology list, no "passionate about". The three findings above it are the evidence; the sentence
+only has to name the trade.
+
+**Adjust only the middle clause to match the lead**, so it names what is actually being proposed:
+
+  - booking-led → "I build booking flows, online ordering and payment systems, and the sites they
+    run on, mostly for independent businesses."
+  - ordering or menu-led → "I build online ordering, menus and payment systems, and the sites they
+    run on, mostly for independent businesses."
+  - quote or enquiry-led → "I build quote and enquiry systems, and the sites they run on, mostly
+    for independent businesses."
+  - full build, for a no-website lead → "I build websites and the booking and payment systems that
+    run on them, mostly for independent businesses."
+
+*** WHAT THE CREDENTIAL LINE MUST NEVER DO ***
+
+  - **Never imply he is local.** No "here in Asheville", no "just down the road", no "a local
+    developer". He is in Lahore. **The email does not state his location and does not hide it** —
+    if they ask, the answer is straightforward. Implying otherwise on first contact is a lie the
+    first reply would expose, and it is the one thing that would make everything else in the email
+    worthless.
+  - **Never claim a team.** No "we", no "my studio", no "our clients". He is one engineer and that
+    is a selling point to a business this size, not something to dress up.
+  - **Never name a client, a case study, a metric or a testimonial.** None have been verified for
+    this pipeline and an unverifiable proof point is worse than none.
+  - **Never state a price or a rate.** The offer is a free concept. Pricing is a conversation
+    after they reply.
+
+**Then one line offering the concept**, and this line has two forms:
 
 - Preview URL returned **200** — link it once:
-  *"I put together a quick concept showing what these would look like fixed:
+  *"I built a quick version of it so you can see rather than imagine:
   `<a href="https://faisalhanif.work/p/SLUG">have a look</a>`. No charge and no obligation."*
   That is the **only** link in the email besides the sign-off.
 - **Anything other than 200** — no anchor tag anywhere in the body, and the sentence becomes an
-  offer instead: *"If it would help, I can put together a quick concept showing what these would
-  look like fixed, and send it over. No charge and no obligation."*
+  offer: *"If it would help, I can build a working version of that page and send it over, so you
+  can see it rather than imagine it. No charge and no obligation."*
 
 **Then the opt-out, which is not optional:** *"If this is not useful, reply once and I will not
 write again."*
 
-**Then sign off** as Faisal Hanif with `faisalhanif.work`.
+**Then sign off**, compactly, exactly this shape:
+
+```
+Faisal Hanif
+Software engineer
+faisalhanif.work
+```
+
+The credential line above already carries the substance, so the signature stays short. **Do not
+repeat the pitch in the signature** and do not add a title beyond "Software engineer".
 
 One `<div>` per paragraph, `<div><br></div>` between paragraphs. **At most two links:** the
 verified preview page, if and only if it returned 200, and `faisalhanif.work` in the sign-off.
+**No attachments. Ever. On a first-touch email.**
 
 *** NEVER CRITICISE. *** The findings are observations, not judgements. "Your booking link points
 at a vendor page that no longer loads" is a finding. "Your website is out of date" is an insult
 with no information in it, and a stranger delivering the second one has already lost.
+
+### A worked example — the 17 August draft, and the same draft fixed
+
+This is a real email from the 17 August run, to a Dutch physiotherapy practice. Read both.
+
+**What went out (weak):**
+
+> I looked at fysiotherapieheezerweg.nl. The "afspraak maken" page has no calendar, it just says
+> to call or fill in a contact form, and the patient portal link next to it is only for existing
+> patients.
+>
+> Two other things: **the footer copyright still reads 2024, two years behind.** And the group
+> classes page describes Medische Fitness, Pilates and Boksen but gives no day or time for any of
+> them, you have to call to find out when one runs.
+>
+> Someone interested in a Pilates trial has to call during weekday hours just to find out when a
+> class runs, before they even know if it fits their week.
+>
+> **If it would help, I can put together a quick concept showing what these would look like fixed,
+> and send it over.**
+
+The opener is genuinely good and the impact line is good. **The second finding is Tier C and is
+the weakest sentence in the email.** And the offer names nothing — "a quick concept" could mean
+anything, from anyone.
+
+**What it should have been:**
+
+> I looked at fysiotherapieheezerweg.nl. The "afspraak maken" page has no calendar on it. A new
+> patient can only call or fill in a form, and the portal link beside it is for existing patients
+> only, so there is no path at all from "I need a physio" to a booked slot.
+>
+> The group classes page has the same gap. Medische Fitness, Pilates and Boksen are all described,
+> but no day or time appears for any of them, and there is no way to reserve a place. Prices are
+> not on the site either, so someone comparing practices has to ring you to find out both.
+>
+> Someone deciding on a Pilates trial at nine in the evening has no way to find out when a class
+> runs, let alone take one.
+>
+> The fix is a booking page that shows your real open slots for both first appointments and
+> classes, lets someone take one without phoning, and puts it into whatever calendar you already
+> use. Class times come off the same schedule, so they only get set once.
+>
+> **I am a software engineer. I build booking flows, online ordering and payment systems, and the
+> sites they run on, mostly for independent businesses.**
+>
+> I built a working version of that page so you can see it rather than imagine it: [have a look].
+> No charge and no obligation.
+>
+> If this is not useful, reply once and I will not write again.
+>
+> Faisal Hanif
+> Software engineer
+> faisalhanif.work
+
+Same length. Three findings, **two of them Tier A and the third a real gap rather than a footer**.
+The impact line survives untouched because it was already right. And the close names the thing
+being offered instead of gesturing at it.
+
+**Note what is not in the fixed version: the copyright year.** It was true. It did not earn its
+place.
+
+**And note what is in it that was missing entirely: one sentence saying who is writing.** The
+version that went out was signed "Faisal Hanif / faisalhanif.work" and nothing else. A practice
+manager in Eindhoven reading that has no idea whether it came from an engineer, an agency, a
+reseller or a scam, and the default assumption for an unsolicited email about your website is not
+a generous one. The credential line is the cheapest trust in the whole email.
 
 ### Respect rules, same as the founder pipeline
 
@@ -726,6 +1024,115 @@ For Category B rows, `business_domain` is the profile URL slug, since there is n
 Then write `daily/task-3-<YYYY-MM-DD>.md` — the packet, below — and commit that too.
 
 ---
+
+## The pull request, which is how state gets back to Faisal
+
+*** THE RUN NEVER COMMITS TO MAIN. IT OPENS A PULL REQUEST. ***
+
+Faisal's instruction, 18 August: every run must leave a pull request he can read and merge, so he
+can see what was drafted, who was contacted, and what state changed, before any of it becomes the
+record. Direct pushes to `main` are finished.
+
+**The branch name is fixed:**
+
+```
+run/task-3-{YYYY-MM-DD}          e.g. run/task-1-2026-08-19
+```
+
+*** STEP A — BEFORE READING ANY STATE, CHECK FOR UNMERGED RUN BRANCHES. ***
+
+This is the failure mode a PR workflow creates and it will bite silently if you skip it. If
+yesterday's PR is still open, `main` does not contain yesterday's rows, and a run that branches
+from `main` will re-contact everyone yesterday drafted.
+
+```
+git fetch --all --prune
+git branch -r --no-merged origin/main | grep 'origin/run/'
+```
+
+  - **Nothing unmerged** -> branch from `origin/main` as normal.
+  - **One or more unmerged run branches** -> **BRANCH FROM THE MOST RECENT ONE, NOT FROM MAIN**,
+    and read every state file from it. State chains forward whether or not Faisal has merged yet.
+    Then open the report IN CAPITALS with:
+    "N UNMERGED RUN BRANCHES: <names>. TODAY BRANCHED FROM <branch> SO STATE IS CORRECT, BUT
+    MERGE THEM OR THE CHAIN KEEPS GROWING."
+  - Say in the report which branch you based on, every run, without exception.
+
+*** STEP B — PUSH THE BRANCH EARLY AND MORE THAN ONCE. ***
+
+Push after the first state write, before the expensive research starts. Push again after each
+later write. A run that dies at call 250 should already have its first push on the remote.
+**After every push, verify it landed:** `git ls-remote origin run/task-3-{DATE}` and compare the
+SHA to local HEAD. A clean exit code is not proof; a matching SHA is.
+
+*** STEP C — OPEN THE PULL REQUEST. ***
+
+Try in this order and stop at the first that works:
+
+  1. `gh pr create --base main --head run/task-3-{DATE} --title "..." --body "..."`
+  2. The GitHub MCP `create_pull_request` tool, if present.
+  3. If both fail but the branch pushed: report the compare URL
+     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-3-{DATE}`
+     so Faisal can open the PR in two clicks. **A pushed branch with no PR is a degraded success,
+     not a failure** — the rows are safe on the remote.
+
+**PR title:** `task-3 {DATE}: N drafts, M state rows`
+
+**PR body — these sections, in this order, every time:**
+
+```
+## Numbers
+target / delivered / floor, and the split
+
+## Deliverability
+bounces last 24h, bounce rate, replies
+
+## Contact ledger  (the two-touch invariant)
+rows at 1 touch  (drafted or sent, eligible for one follow-up)   : N
+rows at 2 touches (FOLLOWED_1 or FOLLOWED_1_DRAFTED, finished)   : N
+rows closed by REPLIED / BOUNCED / OPTOUT / SEQUENCE_DONE        : N
+rows that would exceed 2 touches                                 : MUST BE 0
+
+## Who was contacted today
+one line each: company, person, address, first touch or follow-up
+
+## State changes
+rows added, rows edited and from what to what, row count before -> after
+
+## Anything that needs a decision
+```
+
+*** THE TWO-TOUCH INVARIANT. CHECK IT BEFORE EVERY WRITE. ***
+
+**No person and no company ever receives more than two messages: one first touch, one follow-up.
+That is the whole rule and it is the point of the tracker.**
+
+Count touches from the status cell:
+
+```
+drafted | sent                            = 1 touch   -> one follow-up still allowed
+FOLLOWED_1 | FOLLOWED_1_DRAFTED           = 2 touches -> FINISHED
+SEQUENCE_DONE                             = 2 or more -> FINISHED
+REPLIED | BOUNCED | OPTOUT                = closed regardless of count
+```
+
+Before writing any row, compute what its touch count becomes. **If any row would reach 3, that is
+a bug in the run, not a decision to make.** Do not write it, do not create the draft, and open the
+report in capitals naming the row. This has never happened and it must stay that way.
+
+*** IF NOTHING PUSHES AT ALL, THE RUN HAS FAILED. ***
+
+Not "succeeded with a caveat". Failed.
+
+  a) Do not retry more than twice. A 403 is a permission fact, not a network blip. On 17 August
+     two independent credentials failed identically all day and retrying changed nothing.
+  b) **Send the FULL updated state file as a file**, not just the report. The report is not the
+     state. On 17 August Task 3 sent its tracker and 22 rows survived; Task 1 sent only its report
+     and its suppression-list update was lost with the container.
+  c) Open the report IN CAPITALS with:
+     "STATE WRITE DID NOT LAND. DO NOT TRIGGER THE NEXT RUN UNTIL THIS IS PUSHED — IT WILL
+     RE-CONTACT PEOPLE DRAFTED TODAY."
+  d) List every row added or changed in full table syntax, so it can be pasted by hand.
 
 ## Step 7 — the packet and the report
 
@@ -768,8 +1175,9 @@ Short, plain English, no em dashes, in this order:
    with owner name, phone and **grade**.
 9. **Preview pages generated**, and confirmation both the tracker commit and the packet commit
    landed, with row counts before and after.
-10. **Tool health**: total call count against the planned 230 and the absolute 290, the size of
-    any overrun, and one line on why.
+10. **Tool health**: total call count against the planned 280 and the absolute 340, the size of
+    any overrun, one line on why, **the calls spent on call-lead sourcing against the 15 cap**,
+    and **whether the push landed, with the verified remote SHA.**
 
 ### Then stop
 

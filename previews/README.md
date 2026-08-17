@@ -139,33 +139,39 @@ advance and guarded with a capitalised note. **That was not enough.**
 So on any morning the pages are not live yet, every email ships link-free. Correct behaviour. The
 packet lists which slugs need uploading.
 
-### The three ways to make them live
+### How it is actually done, as of 18 August
 
-**Option A — manual upload to `faisalhanif.work/p/<slug>`.** What the system assumes today.
-Faisal downloads the day's HTML from the run and uploads it. Best-looking URL, most credible
-domain, but it is a manual step every morning and if he is busy the whole day ships link-free.
+**Netlify, one API call per run, served at `https://p.faisalhanif.work/<slug>.html`.**
 
-**Option B — GitHub Pages off this repo.** Turn Pages on for `main`, and every file the routine
-commits to `previews/` is live within a minute of the commit. **Fully automatic — the run's own
-commit publishes the page, so the link check passes on the same morning without Faisal touching
-anything.** Add a `CNAME` file with a subdomain like `p.faisalhanif.work` and a DNS CNAME record,
-and the URLs read as his own domain rather than `github.io`.
+The run builds the pages, assembles the **accumulated** site from `previews/**` across every date
+plus today's, deploys it as a single zip, polls until the deploy reports `ready`, then fetches each
+URL and links only the ones returning 200.
 
-> **The catch, and it decides this:** GitHub Pages publishes **everything in the repo**, and this
-> repo contains `state/do-not-contact.md`. Turning Pages on here would put 257 people's names and
-> email addresses on a public URL. **Do not enable Pages on this repository as it stands.** Either
-> move the previews to their own separate repository, or move `state/` out of the repository
-> entirely first.
+Setup is in `task-3-local-business/SETUP.md`. Two environment variables, `NETLIFY_TOKEN` and
+`NETLIFY_SITE_ID`, and a CNAME.
 
-**Option C — a second repository, previews only.** A public `faisal-previews` repo with Pages on
-and a custom domain, holding nothing but HTML concept pages. Clean separation: the outreach repo
-stays private, the concept pages are public and instantly live. The cost is that the routine
-cannot push to a second repository on its own, so publishing stays a manual step unless a small
-GitHub Action mirrors `previews/` across.
+**Why a token rather than the Netlify connector:** attaching a connector to a Routine gives the
+unattended run every tool that connector exposes, with no permission prompt — site deletion, DNS,
+environment variables — to gain one capability, uploading a zip. That is the shape of the
+14 August send incident, where Gmail had to be attached for `create_draft` and `send_message` came
+along with it. One `curl` is testable, debuggable and narrow.
 
-**The recommendation is C**, and it is worth the twenty minutes of setup: it removes the manual
-morning upload from the critical path, and the pages are meant to be publicly reachable anyway —
-that is what a link in an email means.
+**Why not GitHub Pages:** slower to deploy, and it publishes everything on the branch it serves,
+which would mean either a second repository or `state/do-not-contact.md` on a public URL.
+
+**The one real hazard: a zip deploy replaces the entire site.** Deploying only today's pages would
+wipe every previous day, including URLs sitting in emails already sent. The routine rebuilds the
+full accumulated set every time and refuses to deploy if the file count came out lower than the
+previous run's.
+
+**Why the 200 check stays even though publishing is automatic:** automatic things fail silently.
+On 17 August all fifteen pages were built and none were published, and only that check stopped
+fifteen dead links going out.
+
+**Why linked and never attached:** an HTML attachment from an unknown sender is a standard phishing
+delivery method, so gateways quarantine, strip or block it, and any attachment raises the spam
+score on cold contact more than a link does. **After somebody replies, attach whatever helps** —
+the ban applies to first contact only.
 
 ### What must never be public
 

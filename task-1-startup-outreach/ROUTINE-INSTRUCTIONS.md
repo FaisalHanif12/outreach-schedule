@@ -122,22 +122,25 @@ NICE TO HAVE:
 25 is a target, not a quota. THE FLOOR IS 15. Delivering 17 real, verified, personally-addressed
 drafts is a good morning. Delivering 25 by relaxing anything is a bad one.
 
-=== BUDGET: PLANNED 230 TOOL CALLS, ABSOLUTE CEILING 280 ===
+=== BUDGET: PLANNED 280 TOOL CALLS, ABSOLUTE CEILING 340 ===
+RAISED AGAIN ON 18 AUGUST. Faisal's instruction, verbatim in effect: reaching the number matters,
+and extra calls are authorised to reach it. THE EXTRA CALLS BUY MORE SOURCING LANES, NOT A LOWER
+EVIDENCE BAR. Nothing in the verification rules moves.
 Raised from 180/225 on 17 August, alongside the target going from 20 to 25. The arithmetic: about
 eight to nine calls go into each *delivered* new draft once rejected candidates are counted, and
 the target went from 15 new companies to 20. Leaving the budget at 180 would have produced a run
 that systematically ran out at draft eighteen and reported a failure that was really an
 under-resourcing. That exact mistake was made once already, on Task 3's original 70-call budget.
 
-Work to 230. Spend it in this order so running out never costs the most valuable work:
+Work to 280. Spend it in this order so running out never costs the most valuable work:
 ~20 for the preflight, the reads and the exclusion sets; ~25 for the follow-ups; the remainder on
 sourcing and email verification; and TEN CALLS HELD BACK, ALWAYS, for the audit and the
 suppression-list write.
 
-If you reach 230 and are STILL SHORT OF 25 DRAFTS you may continue to 280 — but only on calls
+If you reach 280 and are STILL SHORT OF 25 DRAFTS you may continue to 340 — but only on calls
 that will plausibly close the gap: sourcing a candidate, verifying an address, creating a draft.
 NOT on retrying something that already failed, not on re-reading a page, not on a line of enquiry
-that has produced nothing. 280 IS ABSOLUTE AND IS NEVER CROSSED FOR ANY REASON. Keep the ten-call
+that has produced nothing. 340 IS ABSOLUTE AND IS NEVER CROSSED FOR ANY REASON. Keep the ten-call
 reserve either way.
 
 *** THE OVERRUN BUYS MORE WORK, NEVER A LOWER BAR. *** It does not permit a guessed address, an
@@ -153,7 +156,13 @@ revisiting, not that the budget should quietly creep upward.
 Measured 13 August: two research subagents burned 197,000 and 113,000 tokens, and almost all of
 it was them writing long prose reports back. Not prompt length. Not pages read. THE REPORTS.
   - No subagent for work doable in under 10 calls yourself.
-  - At most 2 in the whole run, and at most 2 at a time (the container has two cores).
+  - AT MOST 2 RUNNING AT ANY ONE TIME (the container has two cores). THIS IS A CONCURRENCY CAP,
+    NOT A TOTAL. There is no limit on how many you may spawn over the whole run, as long as never
+    more than two are alive at once. On 17 August a run spawned two, got a thin result back, and
+    concluded "I have used my 2 allowed subagents" — then stopped sourcing entirely and delivered
+    7 drafts against a target of 25. THAT READING IS WRONG. Spawn the next pair.
+  - DO NOT SPEND BOTH ON THE SAME LANE. Give each a DIFFERENT lane from the checklist in Step 3,
+    so a thin result tells you something about that lane rather than about the day.
   - Every subagent gets its OWN HARD CALL BUDGET in its brief and reports the count it used.
   - Every subagent returns AT MOST 400 WORDS as NAMED STRUCTURED FIELDS. Essays, narrative,
     restating the brief and repeating itself are forbidden.
@@ -328,6 +337,50 @@ changes in memory until the end — if the run dies during research there would 
 in Gmail that the record knows nothing about.
 
 === STEP 3 — FINDING NEW COMPANIES ===
+
+*** THE EIGHT LANES. YOU MAY NOT DECLARE A THIN DAY UNTIL ALL EIGHT HAVE BEEN ATTEMPTED. ***
+
+On 17 August this run used two subagents, made ONE direct sweep of its own, screened about 118
+companies against a 230-call budget, and reported: "I have exhausted the productive research lanes
+for today." It had not. It had tried two of them and stopped, and Faisal got 2 new companies
+instead of 20.
+
+The rule that allowed it is further down this file and it is correct in itself: if 25 cannot be
+reached without lowering the evidence bar, deliver short and say so. WHAT WAS MISSING IS HOW MUCH
+WORK MUST HAPPEN BEFORE THAT CONCLUSION IS AVAILABLE. Here it is:
+
+  LANE 1  YC company pages and YC launch posts
+  LANE 2  HN "Who is hiring" — THIS month AND last month, both threads
+  LANE 3  Greenhouse / Lever / Ashby / Workable API slug sweeps
+  LANE 4  Funding news from the last 14 days. HIGHEST-YIELD LANE IN THIS PIPELINE — every
+          personal address found on 7 August came from a "Media contact: Name, email" line in a
+          press release, while /contact and /impressum pages produced almost nothing but info@.
+          DO NOT SKIP THIS ONE.
+  LANE 5  npm and PyPI maintainer records
+  LANE 6  Public git commit author headers. Test ONCE (see the note further down); if it works it
+          produced ten of twenty-six addresses on 7 August.
+  LANE 7  Wellfound, WeWorkRemotely, RemoteOK
+  LANE 8  The "Verified but NOT contacted" and "Rejected with a reason worth keeping" sections of
+          state/do-not-contact.md. SEVERAL ARE NEAR MISSES THAT ONE NEW FACT WOULD REINSTATE —
+          Homie needs one address confirmed, MiM and Ounas Health and Docupath each need a
+          headcount, FlexDesk and Nectar and Flex each need one piece of non-US remote evidence.
+          These are the cheapest verified companies available and they are being ignored.
+
+*** YOU MAY NOT REPORT A THIN DAY UNTIL ALL EIGHT LANES HAVE BEEN ATTEMPTED AND YOU HAVE SPENT AT
+LEAST 200 CALLS. *** A lane that returns nothing is attempted. A lane you did not open is not.
+If you are at 200 calls with all eight attempted and still short, THEN deliver short and say so —
+that is the honest outcome the rule was written for.
+
+REPORT EVERY LANE SEPARATELY: name, companies screened, companies verified. A lane that produces
+nothing three runs running gets demoted with the date and the count, exactly like the job-search
+task's source table. Without per-lane numbers nobody can tell a thin day from an unopened lane,
+which is precisely what happened on 17 August.
+
+WORK THE LANES IN PARALLEL WHERE YOU CAN, two subagents at a time, different lane each, spawning
+the next pair as they return. See the subagent policy above — two at a time is a concurrency cap,
+not a total.
+
+
 Start from places where a small company is advertising a REMOTE engineering role. The listing
 proves three things at once — the company exists, it needs engineers, and it accepts remote —
 which makes the hardest filter free. This matters because the only reply this campaign ever
@@ -519,6 +572,114 @@ recipient, company and address, under a heading saying the suppression list was 
 the task must not run again until those rows are added by hand. A BARE STOP IS NOT ENOUGH — the
 drafts already exist in Gmail.
 
+
+*** THE RUN NEVER COMMITS TO MAIN. IT OPENS A PULL REQUEST. ***
+
+Faisal's instruction, 18 August: every run must leave a pull request he can read and merge, so he
+can see what was drafted, who was contacted, and what state changed, before any of it becomes the
+record. Direct pushes to `main` are finished.
+
+**The branch name is fixed:**
+
+```
+run/task-1-{YYYY-MM-DD}          e.g. run/task-1-2026-08-19
+```
+
+*** STEP A — BEFORE READING ANY STATE, CHECK FOR UNMERGED RUN BRANCHES. ***
+
+This is the failure mode a PR workflow creates and it will bite silently if you skip it. If
+yesterday's PR is still open, `main` does not contain yesterday's rows, and a run that branches
+from `main` will re-contact everyone yesterday drafted.
+
+```
+git fetch --all --prune
+git branch -r --no-merged origin/main | grep 'origin/run/'
+```
+
+  - **Nothing unmerged** -> branch from `origin/main` as normal.
+  - **One or more unmerged run branches** -> **BRANCH FROM THE MOST RECENT ONE, NOT FROM MAIN**,
+    and read every state file from it. State chains forward whether or not Faisal has merged yet.
+    Then open the report IN CAPITALS with:
+    "N UNMERGED RUN BRANCHES: <names>. TODAY BRANCHED FROM <branch> SO STATE IS CORRECT, BUT
+    MERGE THEM OR THE CHAIN KEEPS GROWING."
+  - Say in the report which branch you based on, every run, without exception.
+
+*** STEP B — PUSH THE BRANCH EARLY AND MORE THAN ONCE. ***
+
+Push after the first state write, before the expensive research starts. Push again after each
+later write. A run that dies at call 250 should already have its first push on the remote.
+**After every push, verify it landed:** `git ls-remote origin run/task-1-{DATE}` and compare the
+SHA to local HEAD. A clean exit code is not proof; a matching SHA is.
+
+*** STEP C — OPEN THE PULL REQUEST. ***
+
+Try in this order and stop at the first that works:
+
+  1. `gh pr create --base main --head run/task-1-{DATE} --title "..." --body "..."`
+  2. The GitHub MCP `create_pull_request` tool, if present.
+  3. If both fail but the branch pushed: report the compare URL
+     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-1-{DATE}`
+     so Faisal can open the PR in two clicks. **A pushed branch with no PR is a degraded success,
+     not a failure** — the rows are safe on the remote.
+
+**PR title:** `task-1 {DATE}: N drafts, M state rows`
+
+**PR body — these sections, in this order, every time:**
+
+```
+## Numbers
+target / delivered / floor, and the split
+
+## Deliverability
+bounces last 24h, bounce rate, replies
+
+## Contact ledger  (the two-touch invariant)
+rows at 1 touch  (drafted or sent, eligible for one follow-up)   : N
+rows at 2 touches (FOLLOWED_1 or FOLLOWED_1_DRAFTED, finished)   : N
+rows closed by REPLIED / BOUNCED / OPTOUT / SEQUENCE_DONE        : N
+rows that would exceed 2 touches                                 : MUST BE 0
+
+## Who was contacted today
+one line each: company, person, address, first touch or follow-up
+
+## State changes
+rows added, rows edited and from what to what, row count before -> after
+
+## Anything that needs a decision
+```
+
+*** THE TWO-TOUCH INVARIANT. CHECK IT BEFORE EVERY WRITE. ***
+
+**No person and no company ever receives more than two messages: one first touch, one follow-up.
+That is the whole rule and it is the point of the tracker.**
+
+Count touches from the status cell:
+
+```
+drafted | sent                            = 1 touch   -> one follow-up still allowed
+FOLLOWED_1 | FOLLOWED_1_DRAFTED           = 2 touches -> FINISHED
+SEQUENCE_DONE                             = 2 or more -> FINISHED
+REPLIED | BOUNCED | OPTOUT                = closed regardless of count
+```
+
+Before writing any row, compute what its touch count becomes. **If any row would reach 3, that is
+a bug in the run, not a decision to make.** Do not write it, do not create the draft, and open the
+report in capitals naming the row. This has never happened and it must stay that way.
+
+*** IF NOTHING PUSHES AT ALL, THE RUN HAS FAILED. ***
+
+Not "succeeded with a caveat". Failed.
+
+  a) Do not retry more than twice. A 403 is a permission fact, not a network blip. On 17 August
+     two independent credentials failed identically all day and retrying changed nothing.
+  b) **Send the FULL updated state file as a file**, not just the report. The report is not the
+     state. On 17 August Task 3 sent its tracker and 22 rows survived; Task 1 sent only its report
+     and its suppression-list update was lost with the container.
+  c) Open the report IN CAPITALS with:
+     "STATE WRITE DID NOT LAND. DO NOT TRIGGER THE NEXT RUN UNTIL THIS IS PUSHED — IT WILL
+     RE-CONTACT PEOPLE DRAFTED TODAY."
+  d) List every row added or changed in full table syntax, so it can be pasted by hand.
+
 === STEP 7 — CHECK YOUR OWN WORK ===
 Confirm the expected number of drafts exists; that no first-touch recipient from today appears in
 the blocked set or twice in today's own list; that every follow-up carries a replyToMessageId and
@@ -526,16 +687,24 @@ a "Re: " subject; and that every recipient and subject is as intended.
 DO THIS AGAINST THE SETS YOU ALREADY BUILT, not by running a fresh unbounded Gmail search, which
 is banned for the cost reason above.
 
-TWO SPECIFICS:
+THREE SPECIFICS:
   - DO NOT check for a `plaintextBody` field. list_drafts returns a plaintext rendering for every
     draft regardless of what was passed, so that check always fails and means nothing.
-  - To verify the HTML that actually shipped, call get_thread on the draft's thread with
-    messageFormat set to FULL_CONTENT — that argument is REQUIRED, because PLAIN_TEXT, MINIMAL
-    and METADATA_ONLY all omit html_body entirely and the check would falsely fail. Then assert
-    the body contains the portfolio anchor and ZERO occurrences of google.com/url. ONE draft, not
-    all of them, to keep context under control.
+  - THE get_thread HTML CHECK USUALLY DOES NOT WORK AND IS NOT REQUIRED. Try it ONCE on one draft:
+    get_thread with messageFormat FULL_CONTENT (that argument is required; PLAIN_TEXT, MINIMAL and
+    METADATA_ONLY all omit html_body and the check would falsely fail). On 17 August this returned
+    a permission error on draft-only threads and list_drafts returned no body either. IF IT FAILS,
+    NOTE IT UNDER TOOL HEALTH AND MOVE ON. Do not spend more than one call on it.
+  - THE CHECK THAT ACTUALLY PROTECTS AGAINST THE google.com/url REWRITE IS STRUCTURAL, NOT
+    OBSERVATIONAL: assert that EVERY create_draft call this run passed `htmlBody` and that NONE
+    passed `body`. Gmail only rewrites links when a plain-text part is supplied, so if `body` was
+    never passed the rewrite cannot happen. State that assertion explicitly in the report, with
+    the count of drafts it covers.
 
 === STOP CONDITIONS ===
+- Nothing pushed at all -> THE RUN HAS FAILED. Follow the block in step 6: send the state file,
+  open the report in capitals, list every changed row. Do not report success.
+- A row would reach a third touch -> STOP. Do not write it, do not draft it, report it.
 - Could not read state/do-not-contact.md -> STOP. Without it the never-contact-twice rule cannot
   hold.
 - The blocked-emails set came out below 80 percent of the row count you just measured -> the
@@ -564,6 +733,6 @@ Write it to daily/task-1-<YYYY-MM-DD>.md AND output it. In this order:
      rate is the only early signal that exists before mail starts landing in spam.
   i) Anything unusual you assumed
   j) Tool health
-  k) Budget: total calls against the planned 230 and the absolute 280, the size of any overrun
+  k) Budget: total calls against the planned 280 and the absolute 340, the size of any overrun
      with a one-line reason, how many subagents were spawned and what each was given
 Then commit and stop. Do not send anything.
