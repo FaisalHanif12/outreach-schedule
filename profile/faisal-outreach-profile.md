@@ -185,8 +185,13 @@ the run distinguish *rejected* from *unreadable* and report the two separately.
 
 ## Preview page hosting (Task 3 only)
 
-Hosting is manual. The run generates the HTML; Faisal uploads it to
-`https://faisalhanif.work/p/<slug>`.
+**Hosting is automatic as of 18 August.** The run deploys every concept page to Netlify before it
+drafts anything. There is no manual upload step and there never should have been one — a scheduled
+task cannot depend on a human doing something at 10am.
+
+**No custom domain.** Faisal chose on 18 August to use Netlify's own site URL. The run resolves it
+from the deploy response's `ssl_url` field, so no hostname is written down anywhere and adding a
+domain later changes nothing.
 
 **The email carries the link only if the run fetched that exact URL and got HTTP 200.** No 200,
 no link. This is a mechanism, not a warning — see README section 2 for why that distinction

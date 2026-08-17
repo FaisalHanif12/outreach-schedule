@@ -86,7 +86,7 @@ Task 3's findings are now tiered, and the tiers are enforced:
 ### The sixth fix, and the reason not one of the twelve emails carried a link
 
 **All fifteen concept pages were built on 17 August and none of them were ever published.** They
-existed only inside the run's container. `faisalhanif.work/p/<slug>` returned 404, the link check
+existed only inside the run's container. `the Netlify site URL/<slug>` returned 404, the link check
 correctly refused to put a dead URL in an email, and twelve business owners received a description
 of a concept instead of the concept.
 
@@ -94,9 +94,10 @@ The check was not the problem. **There was no publishing step at all** — hosti
 a manual upload Faisal would do each morning, which is not a thing that survives contact with a
 scheduled task.
 
-Now automatic, via **Netlify**: one API call per run, served at `https://p.faisalhanif.work/<slug>`,
-before any email is drafted. The run waits for the deploy to report `ready`, fetches every URL, and
-links only the ones returning 200. Setup is two environment variables and a CNAME —
+Now automatic, via **Netlify**: one API call per run, before any email is drafted. The run waits
+for the deploy to report `ready`, **reads the site URL out of the response's `ssl_url` field**,
+fetches every page, and links only the ones returning 200. No hostname is hardcoded anywhere, so
+adding a custom domain later needs no instruction change. Setup is two environment variables —
 `task-3-local-business/SETUP.md` has it.
 
 **A token, not the Netlify connector.** Attaching a connector to a Routine gives the unattended run
@@ -155,7 +156,7 @@ it turns a silent incident into a next-morning alert.
 
 ### 2. Those same four emails linked to pages that did not exist
 
-Every one pointed at `faisalhanif.work/p/<slug>`. The pages had been generated but never
+Every one pointed at `the Netlify site URL/<slug>`. The pages had been generated but never
 uploaded, so every link 404'd. Four business owners got an email from a stranger pointing at a
 broken page.
 
@@ -245,7 +246,7 @@ bounce-rate block is the only early warning that exists. **Read it first, every 
   this campaign has produced. **Mark that person `REPLIED` before the first scheduled run**,
   or the follow-up logic will eventually reach them.
 - **Status drift.** A 13 August audit found the 7 August rows reading `drafted` when Gmail showed
-  them in Sent — 25 such rows remain today. Separately, 10 rows read `sent, FOLLOWED_1_DRAFTED`,
+  them in Sent — 25 such rows remain today. Separately, 14 rows read `sent, FOLLOWED_1_DRAFTED`,
   meaning a follow-up draft exists that may never have been sent. A one-off reconciliation against Gmail Sent before the first run is worth doing.
 - **Four businesses hold emails with dead links** — carvingrockkitchen, goodmancoffeeroasters,
   federalbakeshop, butterthebread. Either upload the four pages retroactively or send a short

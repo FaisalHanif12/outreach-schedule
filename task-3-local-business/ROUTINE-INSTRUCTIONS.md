@@ -57,6 +57,29 @@ This is detection, not prevention. It turns a silent incident into a next-mornin
 Note that messages Faisal sent by hand will also appear here. Say so — list them and let him
 recognise his own. A false alarm he can dismiss in three seconds is the correct trade.
 
+*** STEP 0d — BRANCH SETUP. DO THIS BEFORE STEP 1 AND BEFORE READING ANY STATE FILE. ***
+
+The full pull-request procedure is further down this file. **This part cannot wait for it**,
+because it decides which commit your state files are read from.
+
+```
+git fetch --all --prune
+git branch -r --no-merged origin/main | grep 'origin/run/'
+```
+
+  - **Nothing unmerged** -> create `run/<task>-<date>` from `origin/main`.
+  - **One or more unmerged run branches** -> **CREATE TODAY'S BRANCH FROM THE MOST RECENT ONE, NOT
+    FROM MAIN.** If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
+    and a run that branches from `main` re-contacts everyone yesterday drafted. State chains
+    forward whether or not anything has been merged.
+    Open the report IN CAPITALS with:
+    `N UNMERGED RUN BRANCHES: <names>. TODAY BRANCHED FROM <branch> SO STATE IS CORRECT, BUT MERGE`
+    `THEM OR THE CHAIN KEEPS GROWING.`
+  - **Say which branch you based on, in every report, without exception.**
+
+**Everything from Step 1 onward reads state from the branch you just created.** Get this wrong and
+every other safeguard in this file is reading yesterday's file.
+
 ## Step 0b — toolbelt
 
 Load in **one** ToolSearch call:
@@ -198,7 +221,10 @@ detail.
    out of the website-lead budget. **At 15 calls you stop and take what you have** — two call
    leads, or one, or none. They count against no sending ceiling and they are worth far less than
    the two website drafts that 15 extra calls would have bought. Report the count you spent.
-3. The fifteen website leads with whatever remains.
+3. **Append the three call-lead rows to `state/local-business-leads.md`, commit, and PUSH.**
+   Do not wait for Step 6. This is the run's first push and it is what makes an early death
+   survivable.
+4. The fifteen website leads with whatever remains.
 
 On 14 August the run went in the wrong order and hit the ceiling during the audits, delivering
 four emails against a target of seven. The call leads survived that morning only because they are
@@ -238,22 +264,32 @@ From `state/local-business-leads.md`, table under `## The list`, ten columns in 
 | business_domain | business | city | state | category | contact | email_or_phone | source_url | date_added | status |
 ```
 
-**Parse every row, whatever its status.** Do not filter rows out while reading — a row's status
-decides contactability, and you cannot apply that test to a row you skipped.
+*** EVERY ROW IN THIS FILE BLOCKS. NO EXCEPTIONS, NO STATUS FILTER. ***
 
-Then build two blocked sets, keyed on **`business_domain`** and on **`email_or_phone`**, from
-every row whose status contains **at least one blocking token**. Rows whose status is entirely
-`queued` or `drafted` do not go into the blocked sets.
+Build two blocked sets, keyed on **`business_domain`** and on **`email_or_phone`**, from **every
+single row in the table**, whatever its status.
 
-**One exception, and it is the reason the three `queued` call leads in the tracker are safe:** a
-row already in the tracker is already in the pipeline. Never generate it a second time as a fresh
-lead in the same category. `queued` means Faisal has not called them yet, not that they are
-available to be discovered again.
+This is not a simplification, it is the rule. **A row exists in this tracker because that business
+is already in the pipeline.** `drafted` means a draft is sitting in Gmail waiting for Faisal to
+press Send — a contact that is about to happen. `queued` means it is on the call list. Sourcing
+either one again produces a second first-touch email to someone already being contacted, which is
+the single thing this file exists to prevent.
 
-*** STATUS IS AN "ALL" TEST, NOT A "CONTAINS" TEST. ***
+An earlier version of this instruction said rows that are entirely `queued` or `drafted` do not go
+into the blocked sets. **That was wrong and it would have re-contacted all twelve businesses
+drafted on 17 August**, because every row a run adds starts life as `drafted` or `queued`.
 
-A business is contactable only if **every** comma-separated token of its status cell is `queued`
-or `drafted`. Vocabulary:
+**So: every row, into the blocked sets, always.**
+
+*** WHAT THE STATUS IS ACTUALLY FOR ***
+
+Status does not decide whether a business can be **sourced** — the blocked sets above already
+settle that, and the answer is always no. Status decides what may happen **to a row that is
+already in the tracker**: whether Faisal may still call it, and whether it is finished.
+
+*** IT IS AN "ALL" TEST, NOT A "CONTAINS" TEST. *** A row is still open only if **every**
+comma-separated token permits it. A *contains* test on `sent, REPLIED` passes and would reach
+someone who already answered. Vocabulary:
 
 ```
 queued   - identified, not yet contacted.              contactable
@@ -656,17 +692,71 @@ business owners got a description of a concept instead of the concept.
 
 **The link check was not the problem. The missing publish step was.** Do not weaken the check.
 
-### The mechanism: one API call to Netlify
+### The mechanism: two possible paths. TRY THEM IN THIS ORDER.
 
-Two environment variables carry it:
+Faisal may have configured either or both. **Detect what is actually available at run time. Do not
+assume.**
+
+**PATH 1 — environment variables plus one curl. PREFERRED.**
 
 ```
 NETLIFY_TOKEN     a Netlify personal access token
 NETLIFY_SITE_ID   the site's API ID
 ```
 
-If either is absent, say so plainly in the report and continue — every email ships link-free, which
-is correct behaviour and not an error.
+Check both are set and non-empty. If they are, use the curl route below and **do not touch any
+Netlify connector tool even if one is loaded.** Narrow, testable, and it fails visibly in the
+report.
+
+**PATH 2 — the Netlify connector, if and only if PATH 1 is unavailable.**
+
+The connector was attached to the Routine on 18 August with read tools and four write tools all set
+to "always allow", which is the only workable setting for an unattended run. So this path is real.
+It is still the fallback rather than the default, because the connector's deploy tooling is built
+around a linked local project in an editor, and this run has a folder of loose HTML files and no
+linked project. The API call is predictable; the tool call may not be.
+
+*** YOU MUST KNOW WHICH SITE. THERE ARE EXACTLY TWO ACCEPTABLE WAYS TO KNOW. ***
+
+**1. `NETLIFY_SITE_ID` is set.** Use it. Done. This is the unambiguous case and the one to prefer.
+
+**2. It is not set — then list the sites on the account** with the project-services reader.
+
+  - **Exactly one site exists** -> that is the site. Use it, and **say so explicitly in the
+    report**: "NETLIFY_SITE_ID not set; deployed to the account's only site, <name>, <id>." That is
+    not a guess, it is the only possibility.
+  - **Two or more sites exist** -> **DO NOT DEPLOY.** You cannot tell which one holds the concept
+    pages, and deploying to the wrong one replaces somebody else's site with fifteen pages about
+    barbers. Open the report IN CAPITALS with
+    `NETLIFY_SITE_ID NOT SET AND N SITES EXIST. CANNOT TELL WHICH IS THE CONCEPT-PAGE SITE. EVERY`
+    `EMAIL SHIPPED LINK-FREE. SET NETLIFY_SITE_ID.`
+    and ship every email link-free.
+  - **Zero sites exist** -> **DO NOT CREATE ONE.** Report it and ship link-free.
+
+**Never create a site to resolve this.** A new site every morning means a fresh URL every morning,
+the accumulated pages scattered across many sites, and every link in every previously sent email
+pointing at a site that no longer receives deploys.
+
+Four hard limits when you are on this path:
+
+  - **Deploy to the one site you resolved above. Nothing else.**
+  - **NEVER CREATE A SITE OR A PROJECT.** Not if the id looks wrong, not if the deploy fails, not
+    for a test. `Netlify-project-services-updater` can create and reconfigure projects and this run
+    has no business doing either.
+  - **Never delete anything** — not a site, a project, a deploy, a domain, an environment variable
+    or an extension. Never touch DNS, team or billing settings. **Deploying is the only thing this
+    run needs from Netlify.**
+  - **Never call `Import-claude-design-from-url`.** It is unrelated to this task.
+
+**Report that you used the connector rather than the token**, so the difference is visible in the
+run report and the choice can be revisited.
+
+**If neither path is available**, say so plainly in the report and continue — every email ships
+link-free, which is correct behaviour and not an error.
+
+**Report which path you used, every run, in one line, along with whether `NETLIFY_SITE_ID` was
+present.** If both paths were available, say so — it means the connector is attached on top of a
+working token and can be removed.
 
 *** A NETLIFY ZIP DEPLOY REPLACES THE ENTIRE SITE. THIS IS THE ONE WAY TO GET THIS BADLY WRONG. ***
 
@@ -679,15 +769,17 @@ repo, flattened to one file per slug, plus today's. Slugs are unique because one
 email ever, so a flat namespace is safe.
 
 ```bash
+# 0. work from the REPOSITORY ROOT, not wherever you happen to be
+cd "$(git rev-parse --show-toplevel)"
+
 # 1. build the FULL site directory from repo history plus today
-mkdir -p /tmp/site
+rm -rf /tmp/site && mkdir -p /tmp/site
 find previews -name '*.html' -exec cp {} /tmp/site/ \;      # every previous day
 cp /mnt/user-data/outputs/*.html /tmp/site/                 # today
 
-# 2. sanity-check the count BEFORE deploying
-ls /tmp/site/*.html | wc -l
-# This number must be >= the number of pages the previous run reported deploying.
-# IF IT IS LOWER, DO NOT DEPLOY. Report it in capitals and ship every email link-free.
+# 2. count what is about to be deployed
+NEW=$(ls /tmp/site/*.html 2>/dev/null | wc -l)
+echo "about to deploy: $NEW pages"
 
 # 3. one zip, one deploy
 cd /tmp/site && zip -qr /tmp/site.zip .
@@ -698,7 +790,34 @@ curl -sS -X POST \
   "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys"
 ```
 
-The response is JSON carrying `id`, `state` and `ssl_url`. **Poll until ready:**
+*** THE GUARD, AND IT IS A REAL CHECK RATHER THAN A REMINDER ***
+
+`state/local-business-leads.md` carries a single line recording what the last deploy contained:
+
+```
+netlify_pages_deployed: N (YYYY-MM-DD)
+```
+
+**Read it before deploying. Compare it to `$NEW`.**
+
+  - `$NEW` **greater than** the recorded N -> deploy. This is the normal case: N plus today's.
+  - `$NEW` **equal to** the recorded N -> **DO NOT DEPLOY.** Equal means `find previews` returned
+    nothing and you are about to upload only today's pages, which would wipe every earlier day.
+    That is the failure this guard exists for and `>=` would have let it through.
+  - `$NEW` **less than** the recorded N -> **DO NOT DEPLOY.** Something is wrong with the branch
+    you based on.
+  - **The line is absent** (first run since this was introduced) -> deploy, and write the line.
+
+On a refusal: open the report IN CAPITALS with
+`NETLIFY DEPLOY REFUSED: WOULD HAVE PUBLISHED $NEW PAGES AGAINST N PREVIOUSLY. EVERY EMAIL SHIPPED
+LINK-FREE.` and carry on. Never deploy anyway.
+
+**After a successful deploy, update that line to the new count and today's date**, in the same
+commit as the tracker rows. It is one line and it is the only thing making this guard real.
+
+---
+
+The deploy response is JSON carrying `id`, `state` and `ssl_url`. **Poll until ready:**
 
 ```bash
 curl -sS -H "Authorization: Bearer $NETLIFY_TOKEN" \
@@ -714,23 +833,57 @@ most six times, then stop waiting and ship link-free.
 
 Deploy state `ready` is Netlify's opinion. The link check is yours, and it stays.
 
-  1. Fetch `https://p.faisalhanif.work/<slug>` for every lead. One fetch each.
-  2. 200 -> that email carries its link.
-  3. Anything else -> that email ships link-free. Not the others. **Per lead, not per run.**
+*** THERE IS NO HARDCODED HOSTNAME. YOU READ IT OUT OF THE DEPLOY RESPONSE. ***
 
-> **Never put a URL in an email that this run has not fetched and confirmed returns HTTP 200.**
-> On 14 August four businesses received emails linking to pages that did not exist. This rule does
-> not relax because publishing is now automatic. **Automatic things fail silently**, which is
-> precisely why the check exists — on 17 August it was the only thing that stopped fifteen dead
-> links going out.
+Faisal decided on 18 August not to put a custom domain on the site, so the links use whatever
+Netlify's own URL for the site is. **Do not invent it, do not guess it, and do not carry one over
+from a previous run's memory.**
+
+**Where it comes from:** the deploy response JSON carries **`ssl_url`** — the site's canonical
+HTTPS URL, stable across deploys. That is `SITE_URL`.
+
+```
+SITE_URL = ssl_url from the deploy response      e.g. https://faisal-concepts.netlify.app
+```
+
+**Do not use `deploy_ssl_url`.** That field is the URL of one specific deploy, unique per upload
+and prefixed with a commit hash. A link built from it would break the moment the next morning's
+deploy happens — every email already sent would go dead. `ssl_url` is the site. `deploy_ssl_url`
+is one snapshot of it.
+
+If you are on the connector path and no `ssl_url` comes back, read the site's URL from the site
+record instead. If an optional `NETLIFY_SITE_URL` environment variable is set, that overrides
+everything — it exists so a custom domain can be added later without touching these instructions.
+
+*** THE URL FORM ***
+
+```
+<SITE_URL>/<slug>
+```
+
+No `.html` suffix. The file on Netlify is `<slug>.html`; Netlify serves it at the clean path.
+**The URL you CHECK and the URL you PUT IN THE EMAIL must be character-for-character identical.**
+Checking one and linking another is how the 14 August dead links happened, and it would happen at
+fifteen times the scale.
+
+  1. Fetch `<SITE_URL>/<slug>` for every lead. One fetch each.
+  2. **200 -> that email carries that exact URL.**
+  3. **A 3xx -> follow it once. 200 at the destination counts, and the email carries the
+     DESTINATION URL, not the one you started with.** Netlify's pretty-URL handling redirects
+     between the `.html` and clean forms, so a redirect here is normal rather than a failure.
+  4. Anything else -> that email ships link-free. **That email only. Not the others.** Per lead,
+     never per run.
+
+**Report the `SITE_URL` you resolved, once, in the run report.** If it differs from yesterday's,
+say so loudly — it means the site changed and yesterday's links may be dead.
 
 **Record the exact URL checked and the result for every lead.** The packet reports both, split into
 emails carrying a verified link and emails that shipped without one.
 
 ### If any of it is not set up
 
-Missing token, missing site id, `api.netlify.com` unreachable from this environment, or the deploy
-never reaching `ready` — all produce the same outcome: **every email ships in its link-free form,
+Neither path available, `api.netlify.com` unreachable from this environment, or the deploy never
+reaching `ready` — all produce the same outcome: **every email ships in its link-free form,
 offering to send the concept instead.** Say plainly at the top of the report which of them it was,
 and carry on. **This is a correct, safe day, not a failed run.** Mailing a dead link to fifteen
 strangers is strictly worse.
@@ -897,7 +1050,7 @@ only has to name the trade.
 
 - Preview URL returned **200** — link it once:
   *"I built a quick version of it so you can see rather than imagine:
-  `<a href="https://faisalhanif.work/p/SLUG">have a look</a>`. No charge and no obligation."*
+  `<a href="<SITE_URL>/SLUG">have a look</a>`. No charge and no obligation."*
   That is the **only** link in the email besides the sign-off.
 - **Anything other than 200** — no anchor tag anywhere in the body, and the sentence becomes an
   offer: *"If it would help, I can build a working version of that page and send it over, so you
@@ -1036,10 +1189,13 @@ record. Direct pushes to `main` are finished.
 **The branch name is fixed:**
 
 ```
-run/task-3-{YYYY-MM-DD}          e.g. run/task-1-2026-08-19
+run/task-3-<YYYY-MM-DD>          e.g. run/task-3-2026-08-19
 ```
 
-*** STEP A — BEFORE READING ANY STATE, CHECK FOR UNMERGED RUN BRANCHES. ***
+*** STEP A — THE UNMERGED-BRANCH CHECK. YOU ALREADY DID THIS IN STEP 0d. ***
+
+Repeated here so the procedure reads as a whole. If you have reached this point without having
+run it, you read your state files from the wrong commit and the run is compromised. Say so.
 
 This is the failure mode a PR workflow creates and it will bite silently if you skip it. If
 yesterday's PR is still open, `main` does not contain yesterday's rows, and a run that branches
@@ -1060,23 +1216,30 @@ git branch -r --no-merged origin/main | grep 'origin/run/'
 
 *** STEP B — PUSH THE BRANCH EARLY AND MORE THAN ONCE. ***
 
-Push after the first state write, before the expensive research starts. Push again after each
-later write. A run that dies at call 250 should already have its first push on the remote.
-**After every push, verify it landed:** `git ls-remote origin run/task-3-{DATE}` and compare the
+**Task 3 needs an extra state write to make this possible.** Its only natural write is Step 6,
+after every draft already exists — so a run that died during the audits would leave twelve drafts
+sitting in Gmail with nothing recorded anywhere. That is the worst available failure state.
+
+So: **append the three call-lead rows to `state/local-business-leads.md` at the END OF STEP 2 and
+push then**, before a single website audit begins. Push again after the preview pages are
+committed. Push again after the website rows are appended in Step 6. **Three pushes, minimum.**
+
+A run that dies at call 250 should already have two pushes on the remote.
+**After every push, verify it landed:** `git ls-remote origin run/task-3-<date>` and compare the
 SHA to local HEAD. A clean exit code is not proof; a matching SHA is.
 
 *** STEP C — OPEN THE PULL REQUEST. ***
 
 Try in this order and stop at the first that works:
 
-  1. `gh pr create --base main --head run/task-3-{DATE} --title "..." --body "..."`
+  1. `gh pr create --base main --head run/task-3-<date> --title "..." --body "..."`
   2. The GitHub MCP `create_pull_request` tool, if present.
   3. If both fail but the branch pushed: report the compare URL
-     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-3-{DATE}`
+     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-3-<date>`
      so Faisal can open the PR in two clicks. **A pushed branch with no PR is a degraded success,
      not a failure** — the rows are safe on the remote.
 
-**PR title:** `task-3 {DATE}: N drafts, M state rows`
+**PR title:** `task-3 <date>: N drafts, M state rows`
 
 **PR body — these sections, in this order, every time:**
 
@@ -1087,11 +1250,14 @@ target / delivered / floor, and the split
 ## Deliverability
 bounces last 24h, bounce rate, replies
 
-## Contact ledger  (the two-touch invariant)
-rows at 1 touch  (drafted or sent, eligible for one follow-up)   : N
-rows at 2 touches (FOLLOWED_1 or FOLLOWED_1_DRAFTED, finished)   : N
-rows closed by REPLIED / BOUNCED / OPTOUT / SEQUENCE_DONE        : N
-rows that would exceed 2 touches                                 : MUST BE 0
+## Contact ledger  (the two-touch invariant, Task 3 vocabulary)
+rows at 0 touches (queued, on the call list, not yet contacted)  : N
+rows at 1 touch   (drafted or sent, one follow-up still allowed) : N
+rows at 1 touch   (called)                                       : N
+rows closed by REPLIED / BOUNCED / OPTOUT                         : N
+rows rejected (screened out, never contacted)                     : N
+rows that would exceed 2 touches                                  : MUST BE 0
+TOTAL must equal the row count in state/local-business-leads.md   : N
 
 ## Who was contacted today
 one line each: company, person, address, first touch or follow-up
@@ -1107,14 +1273,21 @@ rows added, rows edited and from what to what, row count before -> after
 **No person and no company ever receives more than two messages: one first touch, one follow-up.
 That is the whole rule and it is the point of the tracker.**
 
-Count touches from the status cell:
+Count touches from the status cell, using **this tracker's** vocabulary:
 
 ```
-drafted | sent                            = 1 touch   -> one follow-up still allowed
-FOLLOWED_1 | FOLLOWED_1_DRAFTED           = 2 touches -> FINISHED
-SEQUENCE_DONE                             = 2 or more -> FINISHED
-REPLIED | BOUNCED | OPTOUT                = closed regardless of count
+queued                        = 0 touches -> on the call list, Faisal has not called yet
+drafted | sent                = 1 touch   -> one follow-up would still be allowed
+called                        = 1 touch   -> Faisal phoned them
+rejected                      = 0 touches -> screened out, never contacted, never will be
+REPLIED | BOUNCED | OPTOUT    = closed regardless of count
 ```
+
+**Task 3 has no follow-up sequence and must not invent one.** There is no `FOLLOWED_1` in this
+tracker — that vocabulary belongs to the founder pipeline. Every business here is at zero or one
+touch, and this run only ever adds new rows at `drafted` or `queued`. If a business you are about
+to draft is already in the tracker at any status, the blocked sets should have caught it long
+before this point; if it reaches here, that is a bug worth reporting.
 
 Before writing any row, compute what its touch count becomes. **If any row would reach 3, that is
 a bug in the run, not a decision to make.** Do not write it, do not create the draft, and open the
@@ -1143,7 +1316,7 @@ Split the leads into two groups:
 
 - Emails carrying a **verified** link.
 - Emails that shipped **without** one because the page is not live yet — and for these, list the
-  slugs that need uploading to `https://faisalhanif.work/p/`.
+  slugs that need uploading to the Netlify site URL.
 
 **Do not phrase this as a warning to be obeyed before sending**, the way the 14 August packet did.
 The run has already made every email safe either way. This is information, not a tripwire. He can
@@ -1193,7 +1366,7 @@ evidence bar, state the number reached against the target, and say why the gap e
 
 Every finding true. Every improvement proposal specific to that business and that trade. Every
 address quoted from a page you opened. Every link either verified or absent. Every draft through
-the seven-point spam test.
+the ten-point spam test.
 
 **Ten emails that are all true beat fifteen containing one false claim** — and at 40 sends a day
 from a young domain, the false one does not just lose that prospect, it degrades delivery for the

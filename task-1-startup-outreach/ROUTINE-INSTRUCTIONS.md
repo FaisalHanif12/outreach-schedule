@@ -48,6 +48,29 @@ mcp__remote-devices__, which means it is proxied through Faisal's Mac — at 8 i
 laptop is usually shut, and in this environment it may not exist at all. Treat both as a bonus
 that occasionally exists, never as a foundation.
 
+*** STEP 0d — BRANCH SETUP. DO THIS BEFORE STEP 1 AND BEFORE READING ANY STATE FILE. ***
+
+The full pull-request procedure is further down this file. **This part cannot wait for it**,
+because it decides which commit your state files are read from.
+
+```
+git fetch --all --prune
+git branch -r --no-merged origin/main | grep 'origin/run/'
+```
+
+  - **Nothing unmerged** -> create `run/<task>-<date>` from `origin/main`.
+  - **One or more unmerged run branches** -> **CREATE TODAY'S BRANCH FROM THE MOST RECENT ONE, NOT
+    FROM MAIN.** If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
+    and a run that branches from `main` re-contacts everyone yesterday drafted. State chains
+    forward whether or not anything has been merged.
+    Open the report IN CAPITALS with:
+    `N UNMERGED RUN BRANCHES: <names>. TODAY BRANCHED FROM <branch> SO STATE IS CORRECT, BUT MERGE`
+    `THEM OR THE CHAIN KEEPS GROWING.`
+  - **Say which branch you based on, in every report, without exception.**
+
+**Everything from Step 1 onward reads state from the branch you just created.** Get this wrong and
+every other safeguard in this file is reading yesterday's file.
+
 === WHERE EVERYTHING LIVES — this repository is the memory ===
   state/do-not-contact.md            THE suppression list. Authoritative. Shared with task 3.
   profile/faisal-outreach-profile.md identity, sending address, the FIXED email copy
@@ -561,7 +584,7 @@ above. You have git, so APPEND — do not rewrite the file.
 
 WRITE WHAT ACTUALLY HAPPENED, NOT WHAT WAS INTENDED. An audit on 13 August found drift in BOTH
 directions: 26 rows dated 7 August still reading `drafted` when Gmail showed all 26 in Sent, and
-rows reading `sent, FOLLOWED_1_DRAFTED` whose follow-ups may still be unsent drafts (10 today).
+rows reading `sent, FOLLOWED_1_DRAFTED` whose follow-ups may still be unsent drafts (14 today).
 DO NOT PROMOTE A DRAFT TO `sent`. Use FOLLOWED_1_DRAFTED when the follow-up is only drafted, and
 say so in the report.
 
@@ -582,10 +605,13 @@ record. Direct pushes to `main` are finished.
 **The branch name is fixed:**
 
 ```
-run/task-1-{YYYY-MM-DD}          e.g. run/task-1-2026-08-19
+run/task-1-<YYYY-MM-DD>          e.g. run/task-1-2026-08-19
 ```
 
-*** STEP A — BEFORE READING ANY STATE, CHECK FOR UNMERGED RUN BRANCHES. ***
+*** STEP A — THE UNMERGED-BRANCH CHECK. YOU ALREADY DID THIS IN STEP 0d. ***
+
+Repeated here so the procedure reads as a whole. If you have reached this point without having
+run it, you read your state files from the wrong commit and the run is compromised. Say so.
 
 This is the failure mode a PR workflow creates and it will bite silently if you skip it. If
 yesterday's PR is still open, `main` does not contain yesterday's rows, and a run that branches
@@ -608,21 +634,21 @@ git branch -r --no-merged origin/main | grep 'origin/run/'
 
 Push after the first state write, before the expensive research starts. Push again after each
 later write. A run that dies at call 250 should already have its first push on the remote.
-**After every push, verify it landed:** `git ls-remote origin run/task-1-{DATE}` and compare the
+**After every push, verify it landed:** `git ls-remote origin run/task-1-<date>` and compare the
 SHA to local HEAD. A clean exit code is not proof; a matching SHA is.
 
 *** STEP C — OPEN THE PULL REQUEST. ***
 
 Try in this order and stop at the first that works:
 
-  1. `gh pr create --base main --head run/task-1-{DATE} --title "..." --body "..."`
+  1. `gh pr create --base main --head run/task-1-<date> --title "..." --body "..."`
   2. The GitHub MCP `create_pull_request` tool, if present.
   3. If both fail but the branch pushed: report the compare URL
-     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-1-{DATE}`
+     `https://github.com/FaisalHanif12/outreach-schedule/compare/main...run/task-1-<date>`
      so Faisal can open the PR in two clicks. **A pushed branch with no PR is a degraded success,
      not a failure** — the rows are safe on the remote.
 
-**PR title:** `task-1 {DATE}: N drafts, M state rows`
+**PR title:** `task-1 <date>: N drafts, M state rows`
 
 **PR body — these sections, in this order, every time:**
 

@@ -403,6 +403,8 @@ string. Both fixed as of 7 August. **Never pass `body`.**
 | stagewise.io | outlook.com (freemail) | stagewise | Glenn Toews | glenntoews@outlook.com | 2026-08-07 | drafted |
 | omnara.com | gmail.com (freemail) | Omnara | Kartik Sarangmath | kartiksarangmath@gmail.com | 2026-08-07 | drafted |
 | runanywhere.ai | runanywhere.ai | RunAnywhere | Sanchit Monga | san@runanywhere.ai | 2026-08-14 | drafted |
+| gooseworks.ai | athina.ai | Gooseworks | Himanshu | see-gmail-draft-2026-08-17 | 2026-08-17 | drafted |
+| upliftai.org | upliftai.org | Uplift AI | Zaid Qureshi | see-gmail-draft-2026-08-17 | 2026-08-17 | drafted |
 
 ## RECOVERED FROM THE LOST 17 AUGUST RUN — read this before the next run
 
@@ -419,27 +421,32 @@ Gmail drafts. Three of the four are done. **One is still outstanding.**
   17 August. The drafts exist in Gmail and may or may not have been sent yet, which is exactly what
   that status means.
 
-**STILL OUTSTANDING — two rows are missing and this file is not safe until they are added:**
+**Also applied, 18 August — the two new companies are now in the table:**
 
-The run created first-touch drafts to **Gooseworks** and **Uplift AI** at 08:27 on 17 August. Both
-drafts are in Gmail. **Neither company is recorded below.** Until they are, the next run can source
-either one again and send a second first-touch email.
+Gooseworks — company domain `gooseworks.ai`, email domain `athina.ai`, person Himanshu, dated
+2026-08-17, status `drafted`. Uplift AI — both domains `upliftai.org`, person Zaid Qureshi, same
+date and status.
 
-Open the two drafts, read the `To:` addresses, and append rows in this shape:
+(Deliberately written as prose rather than as a table, so that a parser scanning for pipe-delimited
+rows cannot mistake this description for two extra records.)
 
-```
-| gooseworks.ai | <email domain> | Gooseworks | Himanshu <surname> | <address> | 2026-08-17 | drafted |
-| upliftai.org | upliftai.org | Uplift AI | Zaid Qureshi | <address> | 2026-08-17 | drafted |
-```
+**These rows block correctly as they stand.** Blocking is by `company_domain` OR `email_domain` OR
+exact email, so `gooseworks.ai`, `athina.ai` and `upliftai.org` all land in `BLOCKED_DOMAINS` and
+neither company can be sourced again. The email cell is a placeholder and that costs nothing,
+because the domain match fires first.
 
-Two notes taken from the run's own account, so the rows are right:
+**Two notes so nobody "fixes" these rows wrongly:**
 
-- **Gooseworks' email domain is not its website domain.** The address the run verified sits on
-  `athina.ai` while the company being pitched is `gooseworks.ai`. Both belong in the row and both
-  get blocked — that is what the two-domain column layout is for.
+- **Gooseworks' email domain is not its website domain.** The address the 17 August run verified
+  sits on `athina.ai` while the company being pitched is `gooseworks.ai`. Both belong in the row
+  and both get blocked. That is what the two-domain column layout is for.
+- **Tidy-up, whenever convenient and not urgent:** open the two 08:27 drafts from 17 August in
+  Gmail, read the `To:` addresses, and replace `see-gmail-draft-2026-08-17` with the real values.
+  Nothing depends on it — the blocking already works — but the record should say what was actually
+  sent.
 - Uplift AI appears in the "From 14 August" rejected section below as a near miss, dropped then for
   publishing only `founders@upliftai.org`. The 17 August run found a personal address for Zaid
-  Qureshi. **The near-miss note below is now out of date; the row above supersedes it.**
+  Qureshi. **That near-miss note is out of date; the row above supersedes it.**
 
 ## Still worth reconciling before the next run
 
@@ -447,7 +454,7 @@ A 13 August audit found the 7 August rows reading `drafted` while Gmail showed t
 are **25** such rows in the table today (the twenty-sixth, Storepass, has since moved to
 `sent, REPLIED (declined)`).
 
-Separately, **10 rows read `sent, FOLLOWED_1_DRAFTED`** — Hey Telo, Hugentic (now REPLIED),
+Separately, **14 rows read `sent, FOLLOWED_1_DRAFTED`** — Hey Telo, Hugentic (now REPLIED),
 Indexable, Inkbox, Limrun, Meticulate, Moss, nao Labs, o11 and Onlook, plus the five added above.
 That status means a follow-up draft exists but may never have been sent. Check Gmail and move each
 to `sent, FOLLOWED_1` if it went, or leave it if it did not.

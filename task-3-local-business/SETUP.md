@@ -91,14 +91,31 @@ Rename it to something presentable while you are there.
 - **Site ID:** Site configuration → General → Site details → **API ID**
 - **Token:** User settings → Applications → **Personal access tokens** → New access token
 
-### 3. Point your subdomain at it
+### 3. Give the site a readable name — thirty seconds, worth doing
 
-- Netlify → Domain management → Add a domain → `p.faisalhanif.work`
-- In your DNS: CNAME `p` → `<your-site>.netlify.app`
+Faisal decided on 18 August **not** to put a custom domain on this. The links will therefore be
+Netlify's own URL, and the run reads that URL out of the deploy response rather than having it
+hardcoded — so nothing breaks either way.
 
-Links then read `https://p.faisalhanif.work/oakleaf-barbers.html`. Worth doing before the first
-real run — a `random-name-84213.netlify.app` link in a cold email from a stranger undoes some of
-the credibility the concept page is there to build.
+But Netlify's auto-generated names look like `spectacular-pudding-a1b2c3.netlify.app`, and that in
+a cold email from a stranger reads like a throwaway. **Site configuration → Site details → Change
+site name** and pick something plain:
+
+```
+faisal-concepts.netlify.app
+faisalhanif-work.netlify.app
+```
+
+Ten seconds, and the link stops looking like a burner.
+
+**If you add a custom domain later**, you do not need to edit the instructions. The run resolves
+the URL from the deploy response's `ssl_url`, which follows the custom domain automatically. There
+is also an optional `NETLIFY_SITE_URL` environment variable that overrides it if you ever need to
+force one.
+
+**One thing to know before renaming:** changing the site name changes the URL, and **every link in
+every email already sent stops working.** Do it now, before the first real run, and then leave it
+alone.
 
 ### 4. Give both values to the Routine
 
@@ -108,6 +125,34 @@ Task 3 Routine → cloud environment settings → add:
 NETLIFY_TOKEN    = <personal access token>
 NETLIFY_SITE_ID  = <API ID>
 ```
+
+**Neither variable is strictly required if the Netlify connector is attached** — but only under one
+condition, and it is worth knowing exactly what it is.
+
+- **`NETLIFY_TOKEN`** — optional with the connector attached. It buys predictability: one `curl`
+  against a documented API rather than a tool built for linked projects in an editor.
+- **`NETLIFY_SITE_ID`** — optional **only while your Netlify account has exactly one site.** In
+  that case the run lists the sites, finds one, uses it, and says so in the report. That is not a
+  guess. **The moment a second site exists** — for anything, any project — the run can no longer
+  tell which one holds the concept pages, so it **refuses to deploy** and ships every email
+  link-free until you set the variable.
+
+Deploying to the wrong site would replace that site's entire contents with fifteen pages about
+barbers, which is why it refuses rather than picks.
+
+**Set `NETLIFY_SITE_ID` anyway.** It is thirty seconds, it removes a failure mode that will
+otherwise surface on some future morning with no warning, and it makes the report unambiguous.
+
+### If you attached the Netlify connector
+
+Fine, and the instructions now handle it as a genuine fallback — but two things:
+
+- **Remove it from Task 1.** Task 1 never touches Netlify. Every tool attached to an unattended run
+  is surface area for nothing in return.
+- **The write tools are set to "always allow"**, which is the only setting that works unattended.
+  The instructions constrain what may be called: deploy to the named site only; never create a site
+  or project; never delete anything; never touch DNS, team or billing; never call
+  `Import-claude-design-from-url`.
 
 ### The one thing that can go badly wrong
 
@@ -130,23 +175,25 @@ offering to send the concept instead. Safe day. **Do not "fix" a link-free morni
 
 ## Before the first run
 
-**Verify the tracker is in the repo and readable, and that it is the 22-row version.** The
-17 August run appended 15 rows (7 → 22) but could not push them; it sent the updated file to Faisal
-directly. **That file must be back in the repo before the next run**, or Task 3 will re-contact the
-twelve businesses it drafted yesterday. If the tracker does not read at all, the routine stops, by
-design.
+**Verify the tracker has 22 rows.** The 17 August run appended 15 rows (7 → 22) but could not push
+them. Those 15 were reconstructed by hand on 18 August from the Gmail drafts and the preview
+filenames, and every business domain in them was read verbatim — so all twelve website leads and
+all three call leads are blocked. If the authoritative 22-row file Task 3 sent on 17 August is
+still available, prefer it; the reconstruction is a safety net, not the record. If the tracker does
+not read at all, the routine stops, by design.
 
 **Decide what to do about the four dead links.** carvingrockkitchen, goodmancoffeeroasters,
-federalbakeshop and butterthebread are holding emails pointing at pages that 404. The HTML for all
-four is in the old project doc `claude/preview-pages-2026-08-14.md`. Either upload the four pages
-to `faisalhanif.work/p/` so the links resolve, or send a short correction. This does not block the
+federalbakeshop and butterthebread are holding emails pointing at `faisalhanif.work/p/<slug>`, a
+path that has never published anything and 404s. The HTML for all four is in the old project doc
+`claude/preview-pages-2026-08-14.md`. Those four URLs cannot be rescued by the new hosting, because
+they point at the wrong host — so this is either a short correction email or nothing. This does not block the
 routine — the link check stops it recurring either way — but those four people currently have a
 broken link from a stranger in their inbox.
 
-**Note that on day one every email will ship without a preview link.** The pages are generated the
-same morning they are drafted, so nothing is live at that URL yet unless you upload before 10:00.
-The report will say so. **That is the mechanism working, not a bug.** Do not "fix" it by relaxing
-the 200 check.
+**Once Netlify is configured, emails should carry links from the first run.** Publishing happens
+before drafting, so there is no longer a day-one gap. If the report still shows every email
+link-free, publishing failed and the report will name which step — token, site id, network, or the
+deploy never reaching `ready`. **Do not "fix" a link-free morning by relaxing the 200 check.**
 
 ---
 

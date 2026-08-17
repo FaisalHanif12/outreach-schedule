@@ -136,6 +136,20 @@ Regensburg DE · Porto PT · Coimbra PT · Girona ES · San Sebastian ES · Bolo
 almost always carries a real published email address. Start there when the EU slot is proving
 hard to fill.
 
+## Netlify deploy state — the run reads and updates this line
+
+```
+netlify_pages_deployed: 0 (never)
+```
+
+**This is the anti-wipe guard and it is load-bearing.** A Netlify zip deploy replaces the entire
+site, so a run that assembles only today's pages would erase every previously published concept
+page — including URLs sitting in emails already sent. Before deploying, the run counts what it is
+about to upload and compares it to this number. Greater: deploy. **Equal or lower: refuse**, ship
+every email link-free, and say so in capitals. After a successful deploy it rewrites this line.
+
+`0 (never)` means nothing has been published yet, so the first deploy always proceeds.
+
 ## The list
 
 | business_domain | business | city | state | category | contact | email_or_phone | source_url | date_added | status |
@@ -147,12 +161,34 @@ hard to fill.
 | terry-brown-plumbing-253062 | Terry Brown Plumbing | Knoxville | TN | B | owner name not published | (865) 256-3374 | https://www.yellowpages.com/knoxville-tn/mip/terry-brown-plumbing-253062 | 2026-08-14 | queued |
 | smith-cleaning-service-462492076 | Smith Cleaning Service | Knoxville | TN | B | Christina, Owner | (865) 386-3191 | https://www.yellowpages.com/knoxville-tn/mip/smith-cleaning-service-462492076 | 2026-08-14 | queued |
 | kc-lawn-service-510952206 | Kc Lawn Service | Knoxville | TN | B | owner name not published | (865) 247-4379 | https://www.yellowpages.com/knoxville-tn/mip/kc-lawn-service-510952206 | 2026-08-14 | queued |
+| foxbarber.com | Fox Barber and Beauty | Asheville | NC | A | shop inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| saltypawz910.com | Salty Pawz | not recorded | US | A | shop inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| ritualyogamissoula.com | Ritual Yoga Missoula | Missoula | MT | A | shop inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| physio-norwich | Norfolk Physiotherapy and Acupuncture Clinic | Norwich | UK | A | clinic inbox | see-gmail-draft-2026-08-17 | reconstructed from draft, DOMAIN TRUNCATED | 2026-08-17 | drafted |
+| uniqueinkyork.co.uk | Unique Ink York | York | UK | A | studio inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| colinhawkins.co.uk | Colin Hawkins Photography | not recorded | UK | A | Colin | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| frontenacchiropractic.com | Frontenac Chiropractic | Kingston | ON | A | clinic inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| motorcitymechanics.ca | Motor City Mechanics | not recorded | CA | A | shop inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| toowoombadental.com.au | Toowoomba Dental | Toowoomba | QLD | A | practice inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| eastendhub.com.au | East End Hub | not recorded | AU | A | shop inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| chanecoiffures.nl | Chane Coiffures | not recorded | NL | A | salon inbox | see-gmail-draft-2026-08-17 | reconstructed from draft | 2026-08-17 | drafted |
+| fysiotherapieheezerweg.nl | Fysiotherapie Heezerweg | Eindhoven | NL | A | practice inbox | info@fysiotherapieheezerweg.nl | reconstructed from draft | 2026-08-17 | drafted |
+| handy-services-by-chris | Handy Services by Chris | Greenville | SC | B | not recorded | see packet 2026-08-17 | reconstructed from preview slug | 2026-08-17 | queued |
+| premiere-maintenance | Premiere Maintenance | Greenville | SC | B | not recorded | see packet 2026-08-17 | reconstructed from preview slug | 2026-08-17 | queued |
+| commercial-industrial-plumbing | Commercial Industrial Plumbing | Greenville | SC | B | not recorded | see packet 2026-08-17 | reconstructed from preview slug | 2026-08-17 | queued |
 
 **Status values:** `queued` · `drafted` · `called` · `sent` · `REPLIED` · `BOUNCED` · `OPTOUT` ·
 `rejected`.
 
-**Only `queued` and `drafted` permit future contact, and only when EVERY comma-separated token of
-the status cell is one of those two.** An ALL test, never a CONTAINS test.
+*** EVERY ROW ABOVE BLOCKS. THERE IS NO STATUS THAT MAKES A BUSINESS SOURCEABLE AGAIN. ***
+
+A row exists here because that business is already in the pipeline. `drafted` means a draft is
+waiting in Gmail for Faisal to press Send. `queued` means it is on the call list. Both are contacts
+about to happen, and re-sourcing either produces a second first touch.
+
+Status decides what may still happen to a row already here — whether Faisal may call it, whether it
+is finished — **not whether it can be discovered again. It cannot.** That test is an ALL test over
+every comma-separated token, never a CONTAINS test: `sent, REPLIED` is closed, not open.
 
 For Category B rows, `business_domain` is the profile URL slug, since there is no domain. (These
 three carry YellowPages slugs rather than BBB, per the 14 August note below. Same purpose, still a
@@ -161,6 +197,32 @@ stable unique key.)
 **Note on the four Category A rows above:** all four hold emails linking to preview pages that
 were never uploaded, so the links 404. They are recorded as contacted and will not be written to
 again. See the repo README for what to do about them.
+
+
+## RECONSTRUCTED ROWS — 18 August, read this before doubting them
+
+The 17 August run appended 15 rows here (7 to 22) and **could not push them**. It sent the updated
+file to Faisal directly, but that file was never put back into the repo, so as of this morning the
+tracker still held the original 7 rows — meaning **tomorrow's run would have re-contacted all
+twelve businesses it drafted yesterday.**
+
+The 15 rows above were therefore reconstructed by hand from the Gmail drafts and the preview page
+filenames. **They are a safety net, not the authoritative record.**
+
+**What they do correctly:** blocking is keyed on `business_domain`, and every domain above was read
+verbatim off a real draft. All twelve website leads and all three call leads are now blocked.
+That is the job these rows exist to do and they do it.
+
+**What they do not have:** exact email addresses (only Fysiotherapie Heezerweg's was visible),
+source URLs, three cities, the Category B phone numbers and owner names, and the per-lead findings.
+
+**Two things to fix when convenient, neither urgent:**
+
+1. **If the 22-row `local-business-leads.md` that Task 3 sent on 17 August is still available,
+   use it instead of these rows.** It is the real record. These were rebuilt from a screenshot.
+2. **`physio-norwich` is a truncated domain.** It was cut off in the source and the TLD is unknown,
+   so it is recorded as read rather than guessed. It will not block a `physio-norwich.co.uk`
+   candidate by exact match. Correct it from the draft when you next open Gmail.
 
 ## Sources, with verified status
 
@@ -229,8 +291,9 @@ repo — that commit is the delivery mechanism.** Build rules are in `previews/R
 **The email carries ONE link, never an attachment** — attachments on cold email are a serious spam
 signal, stronger than links.
 
-Hosting is manual: Faisal uploads to `https://faisalhanif.work/p/<slug>`. **The run fetches that
-exact URL and requires HTTP 200 before the link goes in the email.** No 200, no link — the
+**Hosting is automatic as of 18 August.** The run deploys every concept page to Netlify, served at
+`<SITE_URL>/<slug>`, before drafting a single email. **It then fetches that exact
+URL and requires HTTP 200 before the link goes in the email.** No 200, no link — the
 sentence becomes an offer to send the concept instead.
 
 That is a mechanism, not a warning, and the difference is the whole point. The old version of this

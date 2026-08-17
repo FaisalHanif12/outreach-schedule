@@ -141,14 +141,18 @@ packet lists which slugs need uploading.
 
 ### How it is actually done, as of 18 August
 
-**Netlify, one API call per run, served at `https://p.faisalhanif.work/<slug>.html`.**
+**Netlify, one API call per run.** The links are the site's own Netlify URL — Faisal chose on
+18 August not to add a custom domain — and **the run reads that URL out of the deploy response's
+`ssl_url` field rather than having it hardcoded.** Never `deploy_ssl_url`, which is unique per
+upload and would break every previously sent link on the next deploy.
 
 The run builds the pages, assembles the **accumulated** site from `previews/**` across every date
 plus today's, deploys it as a single zip, polls until the deploy reports `ready`, then fetches each
 URL and links only the ones returning 200.
 
-Setup is in `task-3-local-business/SETUP.md`. Two environment variables, `NETLIFY_TOKEN` and
-`NETLIFY_SITE_ID`, and a CNAME.
+Setup is in `task-3-local-business/SETUP.md`: two environment variables, `NETLIFY_TOKEN` and
+`NETLIFY_SITE_ID`. No DNS, no CNAME. Add a custom domain later and nothing in the instructions
+needs changing — `ssl_url` follows it.
 
 **Why a token rather than the Netlify connector:** attaching a connector to a Routine gives the
 unattended run every tool that connector exposes, with no permission prompt — site deletion, DNS,

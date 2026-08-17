@@ -21,7 +21,7 @@ first scheduled run:
 
 - Mark `mark@hugentic.ai` as `REPLIED` in `state/do-not-contact.md`. He replied at 13:04 UTC on
   14 August and the follow-up logic will otherwise reach him eventually.
-- Reconcile the 25 rows dated 7 August that read `drafted` against Gmail Sent, plus the 10 rows
+- Reconcile the 25 rows dated 7 August that read `drafted` against Gmail Sent, plus the 14 rows
   reading `sent, FOLLOWED_1_DRAFTED` whose follow-ups may never have been sent.
 
 ---
