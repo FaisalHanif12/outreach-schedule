@@ -1,0 +1,11 @@
+# Nothing generated belongs in this repo except previews/ and daily/, which the
+# routines commit deliberately.
+
+.DS_Store
+*.swp
+node_modules/
+__pycache__/
+
+# Never commit anything from the outputs staging folder.
+outputs/
+*.pdf
