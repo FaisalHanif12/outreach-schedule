@@ -14,7 +14,7 @@ Delete it, or at minimum toggle it off. Leaving it running spends budget on a pi
 reads any more.
 
 **2. Push this folder to a private GitHub repository.** Private is not optional — `state/`
-contains 257 real people with their email addresses.
+contains 259 real people with their email addresses.
 
 **3. Do the two one-off state fixes** listed in the README's "Open items" section, before the
 first scheduled run:
@@ -123,9 +123,20 @@ Then open Gmail and look at the drafts before sending any of them.
 
 ## What "a good morning" looks like
 
-**Target 25, floor 15.** Five follow-ups and twenty new companies on a full morning. Sometimes
-fewer new ones, because the hit rate from screened company to verified contactable founder is
-roughly 6 percent and some mornings the pool is thin.
+**Target 25, floor 15.** Five follow-ups and twenty new companies on a full morning.
+
+**The filters were widened on 18 August to make that reachable:** headcount 1–25 rather than 1–15,
+preferring under 10; and Canada, Australia and New Zealand added to the eligible HQ list. Three
+runs before that produced 3 drafts from ~443 companies screened — under one percent — because
+seven hard filters multiply.
+
+**Two filters were deliberately left alone**, and they are the two doing most of the killing:
+the personal-address requirement (18 companies were rejected for publishing only `founders@` or
+`hello@`) and the "headcount with a stated source" rule. **If the first widened week still comes in
+short, those are the next levers**, and both are judgement calls rather than accuracy ones.
+
+Watch the new report lines: the headcount distribution and the HQ-country distribution. If nothing
+is coming from Canada, Australia or New Zealand after a few days, that lane is not being worked.
 
 **Read the deliverability block first.** Three numbers — bounces in the last 24 hours, bounce
 rate, replies. Task 1 and Task 3 together now use the domain's full 40-a-day ceiling, so that

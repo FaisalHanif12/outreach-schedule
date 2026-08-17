@@ -2,15 +2,15 @@
 
 Two scheduled email-outreach Routines for **M Faisal Hanif**, run on Claude Code web.
 
-> **Keep this repository private.** It holds a suppression list of 257 real people with their
+> **Keep this repository private.** It holds a suppression list of 259 real people with their
 > email addresses, plus a local-business lead tracker.
 
 | | Task 1 | Task 3 |
 |---|---|---|
 | **Folder** | `task-1-startup-outreach/` | `task-3-local-business/` |
-| **Purpose** | Find small startups hiring engineers remotely, verify a real published address for a named technical decision-maker, draft outreach | Audit small local business websites, draft a specific fix-offer with a working concept page; businesses with no site become phone leads |
+| **Purpose** | Find startups of 1–25 people (preferring under 10) hiring engineers remotely, verify a real published address for a named technical decision-maker, draft outreach | Audit small local business websites, draft a specific fix-offer with a working concept page; businesses with no site become phone leads |
 | **Sells** | Faisal as a remote engineer | Faisal's software engineering — booking systems, payments, ordering, rebuilds |
-| **Region** | Worldwide-remote startups | US · UK · Canada · Australia · EU (email). US only (phone) |
+| **Region** | HQ in US · UK · Europe/EEA/CH · Canada · Australia · NZ. Role must be worldwide-remote | US · UK · Canada · Australia · EU (email). US only (phone) |
 | **Runs** | 08:00 Karachi (`0 3 * * *` UTC) | 10:00 Karachi (`0 5 * * *` UTC) |
 | **Produces** | **25** Gmail drafts — 5 follow-ups first, 20 new. Floor 15 | **15** email drafts + 3 call leads. Floor 10 |
 | **Budget** | 280 planned / 340 absolute | 280 planned / 340 absolute |
@@ -176,7 +176,8 @@ guarded with prose instead of a mechanism.**
 Both trackers use compound statuses like `sent, FOLLOWED_1_DRAFTED` and `sent, REPLIED (declined)`.
 A person is contactable only if **every** comma-separated token permits contact.
 
-Measured against the real file on 13 August: 256 rows, of which 8 were compound. A test asking
+Measured against the real file on 13 August: 256 rows, of which 8 were compound; today 259 rows
+and 18 compound. A test asking
 whether the status *contains* "sent" passes all eight — which would have sent a second follow-up
 to five founders and re-emailed **Christophe Kafrouni at zentio.ai, the one person who had
 actually replied**.
@@ -206,7 +207,7 @@ task-3-local-business/
 profile/
   faisal-outreach-profile.md               identity, sending address, the fixed email copy
 state/
-  do-not-contact.md                        THE suppression list. Shared. 257 rows.
+  do-not-contact.md                        THE suppression list. Shared. 259 rows.
   local-business-leads.md                  task 3 tracker + trade/city rotation
 previews/                                  task 3 commits its preview HTML here, by date
 daily/                                     one run report per task per day

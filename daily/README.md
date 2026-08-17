@@ -43,6 +43,13 @@ replies_last_24h:
 | 7 | Wellfound / WWR / RemoteOK | | |
 | 8 | Near-miss reinstatements from the suppression list | | |
 
+## Headcount and HQ distribution — the 18 August widening
+delivered at 1-10 people:
+delivered at 11-25 people:
+HQ split:   US:   UK:   EU:   CA:   AU/NZ:
+(CA/AU/NZ became eligible 18 Aug. Zero from them after a few days
+ means lane 9 is not being worked.)
+
 companies_screened:
 rejected_shared_inbox_only:
 rejected_no_headcount_stated:

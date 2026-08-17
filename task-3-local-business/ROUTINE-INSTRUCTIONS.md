@@ -42,7 +42,9 @@ You also **never call anyone.** The call list is for Faisal.
 
 ---
 
-*** STEP 0a — SENT-FOLDER CHECK. DO THIS BEFORE ANYTHING ELSE. ***
+*** STEP 0a — SENT-FOLDER CHECK. FIRST REAL ACTION OF THE RUN. ***
+
+(Load the toolbelt in Step 0b first — you need `search_threads`. That is plumbing, not a step.)
 
 `mcp__Gmail__search_threads` with `in:sent newer_than:1d`.
 
@@ -64,12 +66,24 @@ because it decides which commit your state files are read from.
 
 ```
 git fetch --all --prune
-git branch -r --no-merged origin/main | grep 'origin/run/'
+git for-each-ref --sort=-committerdate --format='%(refname:short) %(committerdate:iso)' \
+  refs/remotes/origin/run/
 ```
 
   - **Nothing unmerged** -> create `run/<task>-<date>` from `origin/main`.
-  - **One or more unmerged run branches** -> **CREATE TODAY'S BRANCH FROM THE MOST RECENT ONE, NOT
-    FROM MAIN.** If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
+  - **One or more run branches not contained in `main`** -> **CREATE TODAY'S BRANCH FROM THE ONE
+    WITH THE NEWEST COMMIT DATE, NOT FROM MAIN.**
+
+    *** SORT BY COMMIT DATE, NEVER ALPHABETICALLY. *** `git branch -r --no-merged` returns
+    alphabetical order, so `run/task-3-<older date>` sorts after `run/task-1-<newer date>` and a
+    run taking the last line would branch from a commit that predates its own sibling's work.
+    Hence `for-each-ref --sort=-committerdate` above: the first line is the newest.
+
+    Confirm the candidate is genuinely not in `main` with
+    `git merge-base --is-ancestor <branch> origin/main` — exit 0 means it IS already in main, so
+    skip it and try the next line. **A squash-merged branch stays listed forever by
+    `--no-merged`**, and branching off one of those would fork the chain away from `main`
+    permanently. If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
     and a run that branches from `main` re-contacts everyone yesterday drafted. State chains
     forward whether or not anything has been merged.
     Open the report IN CAPITALS with:
@@ -281,6 +295,19 @@ drafted on 17 August**, because every row a run adds starts life as `drafted` or
 
 **So: every row, into the blocked sets, always.**
 
+*** AND TWO SOURCES BEYOND THE FILE, BECAUSE THE FILE IS ONLY AS CURRENT AS THE LAST PUSH. ***
+
+**Source two — today's Drafts folder.** You call `list_drafts` for the ceiling arithmetic anyway.
+**Also read every recipient address and every subject line out of it and add them to the blocked
+sets.** If yesterday's run drafted twelve businesses and then failed to push, the tracker on the
+branch you based on does not know about them — but those twelve drafts are still sitting in Gmail,
+and Gmail is the ground truth. **This alone would have prevented the 17 August loss from becoming a
+double-contact.**
+
+**Source three — this run's own output.** Add each business to the in-memory blocked sets **the
+moment you create its draft**, not at Step 6. Fifteen leads across five regions can surface the
+same business twice in one morning, and the tracker file is not written until the end.
+
 *** WHAT THE STATUS IS ACTUALLY FOR ***
 
 Status does not decide whether a business can be **sourced** — the blocked sets above already
@@ -292,8 +319,8 @@ comma-separated token permits it. A *contains* test on `sent, REPLIED` passes an
 someone who already answered. Vocabulary:
 
 ```
-queued   - identified, not yet contacted.              contactable
-drafted  - a draft exists, may be unsent.              contactable (it is not a contact yet)
+queued   - on the call list, Faisal has not phoned yet.   0 touches. STILL BLOCKS SOURCING.
+drafted  - a draft is waiting in Gmail for Send.          1 touch.  STILL BLOCKS SOURCING.
 sent     - Faisal sent it.                             BLOCKS
 called   - Faisal phoned them.                         BLOCKS
 REPLIED  - a real human replied.                       BLOCKS forever
@@ -667,7 +694,21 @@ for this trade*:
 1. Their real business name, trade, city, phone and hours, laid out the way a customer would want
    to find them.
 2. **The two or three systems that matter for that specific trade**, built as working examples on
-   the page. Online booking for a barber. Menu and directions for a cafe. Emergency call-out,
+   the page.
+
+   *** THESE ARE ILLUSTRATIONS, NOT CLAIMS ABOUT THEIR BUSINESS, AND THE PAGE MUST SAY SO. ***
+   A Category B business has no website, so beyond what the directory profile published you do not
+   know their services, prices or hours. **Never present invented service names as theirs.** Use
+   the trade's ordinary services generically and put one plain line directly above the
+   demonstration:
+
+   > Example services shown - these would be replaced with yours.
+
+   Their **real** name, trade, city, phone, address and hours come from the profile you opened and
+   are stated as fact. Everything inside the demonstration is labelled as an example. That is the
+   line between showing someone what a booking system looks like and pretending to know what they
+   sell — and it is the same line the "nothing invented" rule draws everywhere else.
+ Online booking for a barber. Menu and directions for a cafe. Emergency call-out,
    service area and licence display for a plumber. Quote request for a cleaner or a landscaper.
 3. A short line on what it would take to build.
 
@@ -769,17 +810,30 @@ repo, flattened to one file per slug, plus today's. Slugs are unique because one
 email ever, so a flat namespace is safe.
 
 ```bash
+set -euo pipefail                       # a failing line must STOP, not fall through
+
 # 0. work from the REPOSITORY ROOT, not wherever you happen to be
-cd "$(git rev-parse --show-toplevel)"
+ROOT=$(git rev-parse --show-toplevel)   # fails loudly if this is not a repo
+cd "$ROOT"
+test -d previews || { echo "NO previews DIRECTORY - REFUSING TO DEPLOY"; exit 1; }
 
 # 1. build the FULL site directory from repo history plus today
 rm -rf /tmp/site && mkdir -p /tmp/site
-find previews -name '*.html' -exec cp {} /tmp/site/ \;      # every previous day
-cp /mnt/user-data/outputs/*.html /tmp/site/                 # today
+find "$ROOT/previews" -name '*.html' -exec cp {} /tmp/site/ \;   # every previous day
+cp /mnt/user-data/outputs/*.html /tmp/site/                      # today
 
-# 2. count what is about to be deployed
+# 2. count both sides
+OLD=$(find "$ROOT/previews" -name '*.html' | wc -l)
 NEW=$(ls /tmp/site/*.html 2>/dev/null | wc -l)
-echo "about to deploy: $NEW pages"
+echo "previous pages in repo: $OLD ; about to deploy: $NEW"
+```
+
+*** `set -euo pipefail` IS NOT DECORATION. *** Without it a failed `git rev-parse` leaves you in
+`$HOME`, `find previews` matches nothing, `$NEW` becomes today's pages only, and the deploy wipes
+every page ever published — breaking links in emails **already sitting in strangers' inboxes**,
+silently. That is the worst outcome this task can produce.
+
+```bash
 
 # 3. one zip, one deploy
 cd /tmp/site && zip -qr /tmp/site.zip .
@@ -798,15 +852,32 @@ curl -sS -X POST \
 netlify_pages_deployed: N (YYYY-MM-DD)
 ```
 
-**Read it before deploying. Compare it to `$NEW`.**
+**Read it before deploying. It is one of THREE checks, and all three must pass.**
 
-  - `$NEW` **greater than** the recorded N -> deploy. This is the normal case: N plus today's.
-  - `$NEW` **equal to** the recorded N -> **DO NOT DEPLOY.** Equal means `find previews` returned
-    nothing and you are about to upload only today's pages, which would wipe every earlier day.
-    That is the failure this guard exists for and `>=` would have let it through.
-  - `$NEW` **less than** the recorded N -> **DO NOT DEPLOY.** Something is wrong with the branch
-    you based on.
-  - **The line is absent** (first run since this was introduced) -> deploy, and write the line.
+**CHECK 1 — against the recorded count.**
+
+  - `$NEW` greater than N -> pass. Normal case: N plus today's.
+  - `$NEW` equal to N -> **FAIL.** Equal means `find` matched nothing and you are about to upload
+    today's pages alone. `>=` would have let this through; it must not.
+  - `$NEW` less than N -> **FAIL.** Something is wrong with the branch you based on.
+  - Line absent, first ever run -> pass, and write the line.
+
+**CHECK 2 — `$NEW` must be greater than `$OLD`.** `$OLD` is what the repo actually holds right
+now, counted in the same shell a moment earlier. If today's pages did not increase the total,
+either the copy failed or you are deploying a subset. **FAIL.**
+
+**CHECK 3 — ask the live site, because the two counts above both come from the same working tree
+and regress together.** This is the check that survives a branch that lost its history.
+
+  Take one slug from a **previous date** in the tracker. Fetch it (see the status-code method
+  below). If it returns **200 and that slug is not in `/tmp/site`**, you are about to delete a page
+  that is live right now and linked from an email already sent. **FAIL, hard.**
+
+  If the tracker has no previous-date rows, this check does not apply. Say so.
+
+**On any failure:** open the report IN CAPITALS with
+`NETLIFY DEPLOY REFUSED: WOULD HAVE PUBLISHED $NEW PAGES AGAINST $OLD IN REPO AND N RECORDED.`
+`EVERY EMAIL SHIPPED LINK-FREE.` and name which check failed. **Never deploy anyway.**
 
 On a refusal: open the report IN CAPITALS with
 `NETLIFY DEPLOY REFUSED: WOULD HAVE PUBLISHED $NEW PAGES AGAINST N PREVIOUSLY. EVERY EMAIL SHIPPED
@@ -866,7 +937,27 @@ No `.html` suffix. The file on Netlify is `<slug>.html`; Netlify serves it at th
 Checking one and linking another is how the 14 August dead links happened, and it would happen at
 fifteen times the scale.
 
-  1. Fetch `<SITE_URL>/<slug>` for every lead. One fetch each.
+*** HOW TO GET A STATUS CODE. WEBFETCH CANNOT DO THIS AND MUST NOT BE USED FOR IT. ***
+
+WebFetch is a summariser: it returns page content, never an HTTP status, and this same file says it
+"returns cross-host redirects rather than following them". **A Netlify 404 is a rendered HTML page**
+— WebFetch would read it, find words, and report success. That is a false 200 and a dead link in a
+real email.
+
+Use the shell:
+
+```bash
+CODE=$(curl -sSL -o /dev/null -w '%{http_code}' "<SITE_URL>/<slug>")
+```
+
+`-L` follows redirects and `%{http_code}` reports the code **after** the final hop, which is
+exactly the "follow it once, require 200 at the destination" rule. `-o /dev/null` discards the
+body; you do not need it, only the number.
+
+**A link goes in an email if and only if `$CODE` is `200`.** Not "the page looked fine". Not
+"the deploy said ready". The number.
+
+  1. Run that for every lead. One call each.
   2. **200 -> that email carries that exact URL.**
   3. **A 3xx -> follow it once. 200 at the destination counts, and the email carries the
      DESTINATION URL, not the one you started with.** Netlify's pretty-URL handling redirects
@@ -1163,6 +1254,16 @@ rows in both directions. Append rows and make targeted edits instead.
 
 Keep the row-count assertion anyway — the failure it catches is real and the check is cheap:
 
+*** DO NOT SAVE ALL THE ROWS FOR THE END. APPEND AND PUSH AS YOU GO. ***
+
+On 17 August the run created twelve drafts and then discovered it could not push. Everything it had
+learned lived in one commit that never left the container. **A row that exists only in Gmail is a
+business that gets contacted again tomorrow.**
+
+So: **append the row and push after every batch of five drafts**, plus the call-lead rows at the
+end of Step 2 as already specified. Three or four small pushes beat one big one that may never
+happen. The row-count assertion below applies to each of them.
+
 1. Count existing rows in `state/local-business-leads.md` as **N**.
 2. Append today's rows: website businesses at `drafted`, call leads at `queued`.
 3. Count again. **Confirm the new count is N + rows added.**
@@ -1203,7 +1304,8 @@ from `main` will re-contact everyone yesterday drafted.
 
 ```
 git fetch --all --prune
-git branch -r --no-merged origin/main | grep 'origin/run/'
+git for-each-ref --sort=-committerdate --format='%(refname:short) %(committerdate:iso)' \
+  refs/remotes/origin/run/
 ```
 
   - **Nothing unmerged** -> branch from `origin/main` as normal.

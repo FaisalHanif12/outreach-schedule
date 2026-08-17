@@ -25,7 +25,8 @@ because the tools were loaded and within reach. That is why this block exists an
 toolbelt line below is written the way it is. IF YOU BELIEVE THE RUN REQUIRES SENDING, THE RUN
 IS WRONG — STOP AND REPORT IT.
 
-*** STEP 0a — SENT-FOLDER CHECK. DO THIS BEFORE ANYTHING ELSE. ***
+*** STEP 0a — SENT-FOLDER CHECK. FIRST REAL ACTION OF THE RUN. ***
+(Load the toolbelt below first — you need `search_threads`. That is plumbing, not a step.)
 Call search_threads on `in:sent newer_than:1d`. If ANYTHING went out in the last 24 hours that
 you or a sibling run could have sent, open the report with, in capitals:
 "POSSIBLE UNAUTHORISED SEND: N messages left the mailbox in the last 24 hours" and list
@@ -55,12 +56,24 @@ because it decides which commit your state files are read from.
 
 ```
 git fetch --all --prune
-git branch -r --no-merged origin/main | grep 'origin/run/'
+git for-each-ref --sort=-committerdate --format='%(refname:short) %(committerdate:iso)' \
+  refs/remotes/origin/run/
 ```
 
   - **Nothing unmerged** -> create `run/<task>-<date>` from `origin/main`.
-  - **One or more unmerged run branches** -> **CREATE TODAY'S BRANCH FROM THE MOST RECENT ONE, NOT
-    FROM MAIN.** If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
+  - **One or more run branches not contained in `main`** -> **CREATE TODAY'S BRANCH FROM THE ONE
+    WITH THE NEWEST COMMIT DATE, NOT FROM MAIN.**
+
+    *** SORT BY COMMIT DATE, NEVER ALPHABETICALLY. *** `git branch -r --no-merged` returns
+    alphabetical order, so `run/task-3-<older date>` sorts after `run/task-1-<newer date>` and a
+    run taking the last line would branch from a commit that predates its own sibling's work.
+    Hence `for-each-ref --sort=-committerdate` above: the first line is the newest.
+
+    Confirm the candidate is genuinely not in `main` with
+    `git merge-base --is-ancestor <branch> origin/main` — exit 0 means it IS already in main, so
+    skip it and try the next line. **A squash-merged branch stays listed forever by
+    `--no-merged`**, and branching off one of those would fork the chain away from `main`
+    permanently. If Faisal has not merged yesterday's PR, `main` does not contain yesterday's rows,
     and a run that branches from `main` re-contacts everyone yesterday drafted. State chains
     forward whether or not anything has been merged.
     Open the report IN CAPITALS with:
@@ -221,7 +234,7 @@ verify it from inside the session, so do not attempt workarounds and NEVER put a
 the body.
 
 === STEP 1 — READ THE SUPPRESSION LIST WITHOUT CORRUPTING IT ===
-state/do-not-contact.md is authoritative: ~256 rows in a pipe table plus prose sections carrying
+state/do-not-contact.md is authoritative: 259 rows in a pipe table plus prose sections carrying
 the project's memory. Seven columns in THIS EXACT ORDER:
 
     | company_domain | email_domain | company | person | email | date | status |
@@ -258,7 +271,8 @@ Skip the whole row and you silently UN-BLOCK fourteen companies contacted days a
 Split the cell on commas, ignore case and bracketed text. A person is contactable ONLY IF EVERY
 TOKEN is `drafted` or `sent`. If even one token is anything else, that person is PERMANENTLY
 BLOCKED — no new email and no follow-up.
-Measured 13 August: 256 rows, 8 compound — five `sent, FOLLOWED_1_DRAFTED`, one `sent, SEQUENCE_DONE`,
+Measured 13 August: 256 rows, 8 compound (the file now holds 259 rows and 18 compound statuses)
+— five `sent, FOLLOWED_1_DRAFTED`, one `sent, SEQUENCE_DONE`,
 one `sent, REPLIED (declined, in-person only)`, one `sent, REPLIED (declined)`, plus five
 single-token `BOUNCED`. A test asking whether the status CONTAINS "sent" passes all eight, which
 would have sent a second follow-up to five founders and re-emailed Christophe Kafrouni at
@@ -292,8 +306,18 @@ follow-up target is in blocked emails BY DEFINITION — that is the entire point
 Applying the sets here would reject 100 percent of candidates and produce a silent zero-follow-up
 day that looks exactly like a drained backlog.
 
-For follow-ups the ONLY gates are: every status token is `sent` or `drafted`; exactly ONE message
-in the thread; NO human reply; at least THREE DAYS old; and not already FOLLOWED_1.
+For follow-ups the gates are: every status token is `sent` or `drafted`; exactly ONE message in
+the thread; NO human reply; at least THREE DAYS old; not already FOLLOWED_1 or FOLLOWED_1_DRAFTED.
+
+*** AND ONE MORE, WHICH THE TRACKER CANNOT TELL YOU ON ITS OWN. ***
+**Check the current Drafts folder for an existing unsent follow-up to that same thread**, using the
+`list_drafts` result you already have. If one exists, SKIP THAT PERSON — they are already at two
+touches, one of them just waiting for Faisal to press Send.
+
+This matters because the status is only as current as the last successful push. On 17 August the
+run created five follow-up drafts and then could not push, so the tracker on GitHub still said
+`sent`. A run trusting the tracker alone would draft a second follow-up to all five: a third touch,
+which this campaign never does. **Gmail is the ground truth; the tracker is a cache of it.**
 
 Find them with search_threads on `in:sent older_than:3d newer_than:120d`, pageSize 50, and
 *** PAGINATE FULLY WITH THE pageToken UNTIL THERE ARE NO MORE PAGES. *** Do not skip this.
@@ -361,7 +385,7 @@ in Gmail that the record knows nothing about.
 
 === STEP 3 — FINDING NEW COMPANIES ===
 
-*** THE EIGHT LANES. YOU MAY NOT DECLARE A THIN DAY UNTIL ALL EIGHT HAVE BEEN ATTEMPTED. ***
+*** THE NINE LANES. YOU MAY NOT DECLARE A THIN DAY UNTIL ALL NINE HAVE BEEN ATTEMPTED. ***
 
 On 17 August this run used two subagents, made ONE direct sweep of its own, screened about 118
 companies against a 230-call budget, and reported: "I have exhausted the productive research lanes
@@ -388,8 +412,13 @@ WORK MUST HAPPEN BEFORE THAT CONCLUSION IS AVAILABLE. Here it is:
           Homie needs one address confirmed, MiM and Ounas Health and Docupath each need a
           headcount, FlexDesk and Nectar and Flex each need one piece of non-US remote evidence.
           These are the cheapest verified companies available and they are being ignored.
+  LANE 9  THE NEWLY OPENED REGIONS. Canada, Australia and New Zealand became eligible on
+          18 August and have never been searched. Treat this as a fresh lane rather than a
+          footnote on the others: Canadian startup job boards and funding news, AngelList and
+          Wellfound filtered to CA/AU/NZ, and the local ecosystem press. Canada is the strongest
+          of the three because the timezone works; ANZ needs the async check in the hard filters.
 
-*** YOU MAY NOT REPORT A THIN DAY UNTIL ALL EIGHT LANES HAVE BEEN ATTEMPTED AND YOU HAVE SPENT AT
+*** YOU MAY NOT REPORT A THIN DAY UNTIL ALL NINE LANES HAVE BEEN ATTEMPTED AND YOU HAVE SPENT AT
 LEAST 200 CALLS. *** A lane that returns nothing is attempted. A lane you did not open is not.
 If you are at 200 calls with all eight attempted and still short, THEN deliver short and say so —
 that is the honest outcome the rule was written for.
@@ -458,13 +487,35 @@ ONE CASE THAT SLIPS PAST ALL OF THAT WORDING: a timezone band that excludes UTC+
 to GMT-5" is neither hybrid nor US-only, so it reads as acceptable, but Faisal cannot take it.
 REJECT IT and log it as "timezone band excludes UTC+5".
 
-HARD FILTERS:
-  - Headcount 1 to 15 WITH A STATED SOURCE.
-  - HQ in the USA, UK, or Europe including the EEA and Switzerland.
+HARD FILTERS — WIDENED 18 AUGUST ON FAISAL'S INSTRUCTION:
+  - Headcount 1 to 25 WITH A STATED SOURCE.  *** RAISED FROM 15. ***
+    PREFER UNDER 10. A company of 4 and a company of 22 both pass, but when you have more
+    qualifying candidates than slots, take the smaller one first: at 4 people the founder reads
+    every email himself, at 22 there is a chance it routes past him. Rank by size ascending within
+    equally good candidates, and report the size distribution of what you delivered.
+  - HQ in the USA, UK, Europe including the EEA and Switzerland, CANADA, AUSTRALIA or NEW ZEALAND.
+    *** CANADA, AUSTRALIA AND NEW ZEALAND ADDED 18 AUGUST. ***
   - A real software product — NOT an agency, dev shop, consultancy or staffing firm.
   - Work in web, mobile, cloud, backend or AI. Excludes pure hardware and wet-lab biotech.
   - A NAMED TECHNICAL DECISION-MAKER: founder, co-founder, CEO, CTO, head of engineering, VP
     engineering, engineering manager, technical lead or founding engineer.
+
+*** WHY THESE TWO MOVED, SO NOBODY TIGHTENS THEM BACK BY INSTINCT ***
+Three runs screened about 443 companies and produced 3 drafts — under one percent — against a
+target of 25. The filters are not wrong individually; there are simply seven of them and they
+multiply. Faisal widened the two that cost nothing in accuracy: how big a company may be, and
+which countries count. **Neither change permits a single unverified fact.** Every address is still
+quoted from a page the run opened, every headcount still needs a stated source, and the remote
+evidence rule is untouched.
+
+*** THE TIMEZONE RULE STILL APPLIES TO THE NEW REGIONS, AND IT BITES HARDEST IN ANZ. ***
+Faisal is UTC+5. Canada is comfortable: Toronto 9am is 6pm in Lahore, a full working overlap.
+Australia and New Zealand are the opposite end — Sydney 9am is 4am in Lahore, and Auckland is
+worse. **An Australian or New Zealand company is only a candidate if the role does not demand
+local business hours.** Look for "async", "distributed", "work when you want", "core hours
+overlap of N hours" that UTC+5 can actually meet, or no stated requirement at all. A posting
+requiring AEST or NZST business hours is a REJECT logged as "timezone band excludes UTC+5",
+exactly as before. Do not let a widened HQ list quietly smuggle in roles he cannot work.
 
 BE SPECIFIC ABOUT HEADCOUNT so two runs are comparable. A number stated on a page you opened
 counts — YC's "Team Size: 6", an about page saying "we are 9". An exhaustive named roster on the
@@ -529,8 +580,8 @@ Reference version, and the shape is doing real work:
   I work across full-stack development, system design, software architecture and
   cloud infrastructure, building the product itself and the parts that decide
   whether it holds up as usage grows. 3+ years shipping production systems on web
-  and mobile: PureBody, an AI fitness app with 5,000 users across Google Play and
-  the App Store, and UHA International, an enterprise platform built for a client.
+  and mobile: PureBody, an AI fitness app live on Google Play, and UHA
+  International, an enterprise platform built for a client.
 
   I would be glad to contribute to what you are building at Onlook, working
   remotely. Are you adding engineers right now, or is it too early?
@@ -538,6 +589,13 @@ Reference version, and the shape is doing real work:
   Regards,
   Faisal Hanif
   faisalhanif.work
+
+*** THE POSITIONING PARAGRAPH CONTAINS NO NUMBERS EXCEPT "3+ YEARS". ***
+An earlier version claimed PureBody had "5,000 users across Google Play and the App Store". That
+figure was never verified and it was going into every email, twenty times a day. It is gone. Do not
+reintroduce a user count, a download count, a revenue figure, a client count or a percentage, in
+this paragraph or anywhere else. **App Store presence was also dropped** — only the Google Play
+listing is confirmed.
 
 THE MIDDLE PARAGRAPH — the positioning — IS IDENTICAL IN EVERY EMAIL, WORD FOR WORD, and must be
 inserted WITH CODE rather than regenerated. It leads with heavy general skills because those
@@ -619,7 +677,8 @@ from `main` will re-contact everyone yesterday drafted.
 
 ```
 git fetch --all --prune
-git branch -r --no-merged origin/main | grep 'origin/run/'
+git for-each-ref --sort=-committerdate --format='%(refname:short) %(committerdate:iso)' \
+  refs/remotes/origin/run/
 ```
 
   - **Nothing unmerged** -> branch from `origin/main` as normal.
@@ -747,7 +806,10 @@ Write it to daily/task-1-<YYYY-MM-DD>.md AND output it. In this order:
   e) New companies: screened / unreadable / rejected for no remote evidence / rejected for no
      published address / drafts created / skipped as already contacted
   f) Shared-inbox NEAR MISSES with their addresses
-  g) Which daily total you applied and the split, against the target of 25 and the floor of 15
+  g) Which daily total you applied and the split, against the target of 25 and the floor of 15,
+     PLUS the headcount distribution of what you delivered (how many at 1-10, how many at 11-25)
+     and the HQ-country distribution. Both filters were widened on 18 August specifically to reach
+     the target; these two numbers are how anyone can tell whether the widening worked.
   h) THE DELIVERABILITY BLOCK. Three numbers, every run, no exceptions:
        - bounces found in the inbox in the last 24 hours, and the addresses
        - bounce rate as a percentage of the last 100 rows marked sent in state/do-not-contact.md

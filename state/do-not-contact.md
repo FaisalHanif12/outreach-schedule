@@ -6,7 +6,7 @@ only thing standing between Faisal and emailing the same founder twice.**
 Migrated from the old document store on 17 August 2026. The rows are unchanged. What changed is
 how it gets written: see "After every run" below.
 
-> **This repository must stay private.** The table below is 257 real people with their real
+> **This repository must stay private.** The table below is 259 real people with their real
 > email addresses.
 
 ## How to use this file — every run, without exception
@@ -56,7 +56,8 @@ on full lowercased name plus domain. Never on a fragment.
 Statuses are compound: `sent, FOLLOWED_1_DRAFTED`, `sent, REPLIED (declined)`. A person is
 contactable only if **every** comma-separated token permits contact.
 
-Measured against this file on 13 August: 256 rows, 8 of them compound (257 rows today). A test
+Measured against this file on 13 August: 256 rows, 8 of them compound (259 rows and 18 compound
+statuses today). A test
 asking whether the status *contains* "sent" passes all eight — which would have sent a second
 follow-up to five founders and re-emailed **Christophe Kafrouni at zentio.ai, the one person who
 had actually replied.**

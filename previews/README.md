@@ -61,7 +61,15 @@ something, so it answers *"what would a website actually do for me?"* — not *"
 
 1. **Them, laid out the way a customer would want to find them.** Real name, trade, city, phone,
    address, opening hours, years in business. All from the directory profile you opened.
-2. **The two or three systems that matter for that specific trade**, built as working examples:
+2. **The two or three systems that matter for that specific trade**, built as working examples.
+
+   **These are illustrations, not claims.** A Category B business has no website, so you do not know
+   their services or prices. Use the trade's ordinary services generically and label them on the
+   page: *"Example services shown - these would be replaced with yours."* Their real name, trade,
+   city, phone, address and hours are stated as fact, from the profile you opened. Everything inside
+   the demonstration is marked as an example.
+
+   By trade:
    - barber, salon, tattoo, med spa → online booking with real service names and durations
    - cafe, bakery, restaurant → menu, ordering, directions, hours
    - plumber, electrician, HVAC, roofer → emergency call-out, service area map, licence display,
