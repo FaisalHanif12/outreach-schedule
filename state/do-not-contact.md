@@ -92,6 +92,8 @@ sent          - Faisal sent it
 drafted       - a draft exists in Gmail, may be unsent. BLOCKS JUST AS HARD as "sent",
                 because he sends by hand over several days and an unsent draft is a
                 contact that is about to happen
+FOLLOWED_1_DRAFTED - a follow-up draft exists, may be unsent. BLOCKS. The follow-up has
+                already been written, so writing another is a duplicate.
 FOLLOWED_1    - got the one and only follow-up. Finished. Never contact again.
 SEQUENCE_DONE - two or more messages already sent by Faisal in the thread. Finished.
 REPLIED       - a real human replied. Never contact again.
@@ -127,8 +129,9 @@ the run calling `send_message` itself.
 ## FIRST REPLY OF THE CAMPAIGN — 6 August 2026
 
 Chris Kafrouni at Zentio replied on 6 August at 14:42 UTC. A polite decline: they were only hiring
-for in-person roles. Faisal answered it himself at 20:47 UTC. That is one reply in roughly 230
-contacts.
+for in-person roles. Faisal answered it himself at 20:47 UTC. That was the first reply, in roughly
+230 contacts. Two more have followed: Storepass on 7 August (also a decline) and Hugentic on
+14 August. **Three human replies in total.**
 
 **The objection was location, not the pitch** — a filter problem rather than a copy problem.
 Nothing in the sourcing at that point checked whether a company would consider remote. That is why
@@ -403,16 +406,24 @@ string. Both fixed as of 7 August. **Never pass `body`.**
 
 ## PENDING CORRECTION — do this before the first scheduled run
 
-**`hello@hugentic.ai` (Mark Bird) replied at 13:04 UTC on 14 August.** That is only the second
-genuine reply this campaign has produced. His row above still reads `sent, FOLLOWED_1_DRAFTED`.
+**`hello@hugentic.ai` (Mark Bird) replied at 13:04 UTC on 14 August.** That is the third genuine
+reply this campaign has produced, after Zentio and Storepass. His row above still reads
+`sent, FOLLOWED_1_DRAFTED`.
 
 **Change it to `sent, REPLIED`**, or the follow-up logic will eventually reach him — and following
 up on a thread with a real human reply in it is the one thing this campaign never does.
 
-**Also worth reconciling before the first run:** a 13 August audit found 26 rows dated 7 August
-reading `drafted` while Gmail showed all 26 in Sent, and 5 rows reading `sent, FOLLOWED_1` whose
-follow-ups were still unsent drafts. Neither drift changes who is blocked — both statuses block —
-but it makes the follow-up eligibility set wrong.
+**Also worth reconciling before the first run:** a 13 August audit found the 7 August rows reading
+`drafted` while Gmail showed them in Sent. There are **25** such rows in the table today (the
+twenty-sixth, Storepass, has since moved to `sent, REPLIED (declined)`).
+
+Separately, **10 rows read `sent, FOLLOWED_1_DRAFTED`** — Hey Telo, Hugentic, Indexable, Inkbox,
+Limrun, Meticulate, Moss, nao Labs, o11 and Onlook. That status means a follow-up draft exists
+but may never have been sent. Check Gmail and move each to `sent, FOLLOWED_1` if it went, or
+leave it if it did not.
+
+Neither drift changes who is blocked — every one of those statuses blocks — but both make the
+follow-up eligibility set wrong.
 
 ## Verified but NOT contacted — safe to use, do not block
 

@@ -7,9 +7,9 @@ You are running unattended at 10:00 Karachi time for **M Faisal Hanif**. Nobody 
 **Never call `AskUserQuestion`. Never wait for approval. This prompt is the approval.** Where
 something is ambiguous, pick the most reasonable option, note it in the report, and continue.
 
-Faisal sells web design and development to small independent businesses. Your job this morning is
-to find ten of them, prove something true and specific about each, and leave the approach ready
-for him.
+Faisal sells software engineering to small independent businesses. Your job this morning is to
+find eighteen of them — fifteen for email, three for the call list — prove something true and
+specific about each, and leave the approach ready for him.
 
 ---
 
@@ -48,7 +48,7 @@ You also **never call anyone.** The call list is for Faisal.
 
 - Nothing found → write one line in the report: `SENT CHECK: clean, 0 messages in last 24h.`
 - Anything found → **open the report with, in capitals:**
-  `UNAUTHORISED SEND DETECTED — N MESSAGES LEFT THIS ACCOUNT IN THE LAST 24 HOURS`
+  `UNAUTHORISED SEND DETECTED: N MESSAGES LEFT THIS ACCOUNT IN THE LAST 24 HOURS`
   and list every recipient and subject. Then **continue the run in draft-only mode as normal.**
   Do not try to recall, delete or apologise for anything.
 
@@ -66,8 +66,8 @@ mcp__Gmail__create_draft, mcp__Gmail__list_drafts, mcp__Gmail__search_threads,
 WebSearch, WebFetch
 ```
 
-That is the whole belt. `list_drafts` is needed for the ceiling arithmetic, `search_threads` for
-Step 0a.
+That is the whole belt, plus the file-writing and git tools the environment already provides.
+`list_drafts` is needed for the ceiling arithmetic, `search_threads` for Step 0a.
 
 If the Gmail tools come back missing, retry **once**, then report it at the top of the output in
 capitals. That is a critical failure, not a quiet day — a run that audits ten businesses and
@@ -143,27 +143,37 @@ content. If unreadable exceeds a quarter of pages attempted, open the report wit
 
 ## The budget
 
-**Planned: 110 tool calls. Absolute ceiling: 140.** Ten are reserved in either case for the
+**Planned: 230 tool calls. Absolute ceiling: 290.** Ten are reserved in either case for the
 tracker write and the packet write.
 
-The 110 is a deliberate revision up from an earlier 70, and the reasoning is worth keeping:
-roughly six calls go on the audit for each business, plus the discovery search, the hunt for a
-published address, the link check and the draft — nearer twelve to fifteen calls per *delivered*
-lead once rejected candidates are counted. Seven website leads plus three call leads plus
-overhead does not fit inside 70. At that ceiling the task systematically ran out partway through
-and reported a failure that was really an under-resourcing.
+Raised from 110/140 on 17 August, when the daily target went from 7 website leads to 15. The
+arithmetic: roughly six to eight calls go on the audit for each business, plus the discovery
+search, the hunt for a published address, the link check and the draft — nearer fourteen to
+sixteen calls per *delivered* lead once rejected candidates are counted. Fifteen website leads
+plus three call leads plus overhead does not fit inside 110.
 
-Work to 110. If you reach it and are **still short of seven website leads and three call leads**,
-you may continue to 140 — but only on calls that will plausibly close the gap: screening a new
-candidate, auditing a site, finding a published address, opening a directory profile, creating a
-draft. **Not** on retrying something that already failed, and **not** on a trade-and-city pairing
-that has produced nothing. **140 is absolute and is never crossed.**
+**This is the second time this budget has been under-set, and the failure mode is worth naming so
+it is not repeated a third time.** The original figure was 70. At 70 the run systematically ran
+out partway through and reported a failure that was really an under-resourcing — the method was
+fine, the allowance was wrong. Leaving it at 110 while doubling the target would have reproduced
+exactly that.
+
+Work to 230. If you reach it and are **still short of fifteen website leads and three call
+leads**, you may continue to 290 — but only on calls that will plausibly close the gap: screening
+a new candidate, auditing a site, finding a published address, opening a directory profile,
+creating a draft. **Not** on retrying something that already failed, and **not** on a
+trade-and-city pairing that has produced nothing. **290 is absolute and is never crossed.**
 
 *** THE OVERRUN BUYS MORE SEARCHING, NEVER A LOWER BAR. *** It does not permit a guessed address
 or phone number, an unverified claim about someone's website, a relaxed filter, or a shortened
-audit. That last one matters most here. **Seven emails containing one false claim are worse than
-four that are all true.** The rule that every negative claim needs its own probe holds at call
-139 exactly as it does at call 12.
+audit. That last one matters most here. **Fifteen emails containing one false claim are worse
+than eight that are all true.** The rule that every negative claim needs its own probe holds at
+call 289 exactly as it does at call 12.
+
+**15 is a target, not a quota. THE FLOOR IS 10.** Delivering twelve emails where every finding is
+true and every improvement proposal is real is a good morning. Delivering fifteen by padding one
+of them with a generic observation is a bad one, because the generic one is the one that gets
+marked as spam and drags the other fourteen down with it.
 
 The overrun is meant to be occasional. **If this task overruns three days running, say so plainly
 in the report** — that is a signal the target or the method needs revisiting, not a budgeting
@@ -174,10 +184,11 @@ detail.
 1. Preflight and the state reads.
 2. **The three no-website call leads.** Under ten calls in total, and they count against no
    sending ceiling.
-3. The seven website leads with whatever remains.
+3. The fifteen website leads with whatever remains.
 
-On 14 August the run went in the wrong order, hit the ceiling during the audits, and delivered
-four emails and **zero** call leads. The cheapest work in the run is the easiest thing to lose.
+On 14 August the run went in the wrong order and hit the ceiling during the audits, delivering
+four emails against a target of seven. The call leads survived that morning only because they are
+cheap. Do them first and they cannot be the thing that gets squeezed.
 
 ## Subagents
 
@@ -213,8 +224,17 @@ From `state/local-business-leads.md`, table under `## The list`, ten columns in 
 | business_domain | business | city | state | category | contact | email_or_phone | source_url | date_added | status |
 ```
 
-Block on **`business_domain`** and on **`email_or_phone`**, across **every row whatever its
-status**.
+**Parse every row, whatever its status.** Do not filter rows out while reading — a row's status
+decides contactability, and you cannot apply that test to a row you skipped.
+
+Then build two blocked sets, keyed on **`business_domain`** and on **`email_or_phone`**, from
+every row whose status contains **at least one blocking token**. Rows whose status is entirely
+`queued` or `drafted` do not go into the blocked sets.
+
+**One exception, and it is the reason the three `queued` call leads in the tracker are safe:** a
+row already in the tracker is already in the pipeline. Never generate it a second time as a fresh
+lead in the same category. `queued` means Faisal has not called them yet, not that they are
+available to be discovered again.
 
 *** STATUS IS AN "ALL" TEST, NOT A "CONTAINS" TEST. ***
 
@@ -243,17 +263,44 @@ the report.**
 Call `mcp__Gmail__list_drafts`. Count drafts created **today**.
 
 ```
-ceiling = min(7, 40 - drafts_already_created_today)
+ceiling = min(15, 40 - drafts_already_created_today)
 ```
 
 **The number is 40, not 30.** An earlier version used 30, which produces zero drafts on every
-full day, silently. Task 1 runs two hours earlier from the same address and takes up to 20, so a
-normal morning is 20 + 7 = 27 against 40.
+full day, silently.
+
+**THERE IS NO HEADROOM LEFT IN THIS ARITHMETIC.** Task 1 runs two hours earlier from the same
+address and takes up to 25, so a normal morning is 25 + 15 = **exactly 40** against a 40-per-day
+domain maximum. Before 17 August it was 20 + 7 = 27, which left thirteen spare. It does not any
+more. Two consequences:
+
+- **If Task 1 over-ran, you absorb it.** That is what the `40 - drafts_already_created_today`
+  term is for and it is not optional. If Task 1 created 25 you get 15. If it created 28 you get
+  12. Never take your full 15 without doing the subtraction first.
+- **Never create a 16th draft**, for any reason.
 
 If the arithmetic comes out at **zero or less**: create no email drafts, say so plainly, and
 **still deliver the three call leads**, which count against nothing.
 
 **Report the ceiling you derived and the existing draft count.** Both, as numbers.
+
+### The deliverability block — report this every run
+
+Three numbers, alongside the ceiling:
+
+- bounces that arrived in the inbox in the last 24 hours, with the addresses
+- bounce rate across the last 50 rows in `state/local-business-leads.md` marked `sent`
+- any reply received in the last 24 hours
+
+**If the bounce rate is above 2 percent, open the whole report IN CAPITALS with
+`DELIVERABILITY WARNING: BOUNCE RATE N PERCENT. RECOMMEND PAUSING VOLUME.`** Do not change the
+target yourself — that is Faisal's decision. Make the number impossible to miss.
+
+At 40 sends a day on a domain first used in August, a rising bounce rate is the only early signal
+that exists before mail silently starts landing in spam folders. Historically **every bounce in
+this campaign came from a shared inbox and no personal address has ever bounced** — so a bounce
+spike usually means address quality slipped, not that the domain is burnt. Say which it looks
+like.
 
 ---
 
@@ -335,19 +382,36 @@ read aloud.
 
 ---
 
-## Step 3 — the seven website leads
+## Step 3 — the fifteen website leads
 
-### Finding them
+### Finding them — five regions, not one
 
-Pick **one trade and one city** from the rotation lists in `state/local-business-leads.md`,
-choosing a pairing **not used in the last seven days**, and search it: "barber shop Asheville NC",
-"independent coffee shop Boise Idaho", that shape. US first, then UK, Australia, EU/EEA.
+**Rotate across all five regions, not US-only.** Faisal set this on 17 August: United States,
+United Kingdom, Canada, Australia, and the EU or EEA. Take roughly three leads from each region
+on a normal morning, and record the split in the report.
+
+Pick **one trade and one city per region** from the rotation lists in
+`state/local-business-leads.md`, choosing pairings **not used in the last seven days**, and search
+them: "barber shop Asheville NC", "independent coffee shop Bristol UK", "dentist Hamilton Ontario",
+"physiotherapy clinic Geelong Australia", that shape.
 
 Every candidate found this way has a website by definition. That is the whole point of splitting
 the two categories at the source rather than trying to filter one pool.
 
-Mid-size cities are in the rotation deliberately. Large metros are already saturated with
-agencies cold-emailing these businesses.
+Mid-size cities are in the rotation deliberately, in every region. Large metros are already
+saturated with agencies cold-emailing these businesses.
+
+**Three things about the non-US regions, so the run does not treat them as a failure:**
+
+- WebSearch is US-weighted. Expect to spend one or two more calls per non-US lead. Budget for it,
+  do not skip the region because the first search was thin.
+- **UK, Ireland, Australia and Canada are the easiest non-US pools**, because the sites are in
+  English and small businesses there publish a contact address at roughly the same rate.
+- **EU sites in other languages are in scope and are often the best leads**, because almost nobody
+  is cold-emailing them in English about their booking flow. German and Dutch sites in particular
+  carry an `Impressum` or `Contact` page with a real published address, which is a legal
+  requirement there. **Write the email in English regardless** — do not attempt a translated
+  email, because a machine-translated cold email reads worse than a plain English one.
 
 ### Reject fast, before spending audit calls
 
@@ -357,30 +421,96 @@ agencies cold-emailing these businesses.
 - Not in the blocked sets.
 - **Prefer sites that look dated or thin.** Those are the ones who need the work.
 
+---
+
 ### The audit — where credibility is won or lost
 
-Budget roughly six calls per business. Gather **only** findings that are true and that the owner
-could verify in under a minute.
+Budget roughly six to eight calls per business. The audit has **two halves and both are required**.
 
-What is reliably determinable, tested 13 August against three real small-business sites:
+Faisal is a software engineer, not a web designer selling refreshes. The email has to read like an
+engineer who actually looked at their business and can see how to make it work better. So:
+
+**HALF ONE — three true, checkable observations.** What is wrong or missing right now, each one
+verifiable by the owner in under a minute.
+
+**HALF TWO — the improvement, framed as what it does for the business, not what it does to the
+website.** This is the half that was missing before 17 August and it is the reason the emails read
+as generic. "Your site is not mobile friendly" is a critique. "Roughly two thirds of the people
+searching for a barber near them are on a phone, and your booking button sits below the fold on a
+phone, so they call instead or they leave" is a business observation with an engineer behind it.
+
+#### What is reliably determinable
+
+Tested 13 August against three real small-business sites:
 
 | Signal | Reliable? |
 |---|---|
 | Viewport meta tag, and therefore mobile behaviour | **Yes** |
 | A published contact email, when present | **Yes** |
 | Phone number | **Yes** |
-| Booking or ordering links, and which vendor they point at | **Yes — strongest signal available** |
+| Booking, ordering or payment links, and which vendor they point at | **Yes — strongest signal available** |
+| Whether a booking flow exists at all, versus "call us" | **Yes** |
 | Copyright year in the footer | **Yes** |
+| Whether prices or a menu are published | **Yes** |
 | Platform, read from a generator meta tag | About half the time |
 | Broken or missing pages | Yes, but one call per link |
 | HTTPS or certificate problems | **NOT DETERMINABLE. Never make a claim about these.** |
+| Page speed, Core Web Vitals, Lighthouse scores | **NOT DETERMINABLE. Never quote a number.** |
+| Traffic, rankings, conversion rate, revenue | **NOT DETERMINABLE. Never estimate one.** |
+
+#### The improvement lanes — pick the two or three that actually apply
+
+Do not run down this list mechanically. Pick what genuinely fits **that trade and that business**,
+and say why it fits them specifically.
+
+**1. Booking and appointments.** The single highest-value lane for barbers, salons, dentists,
+physiotherapists, driving schools, med spas, tattoo studios and photographers. Look for: no
+booking at all, "call to book" only, a third-party widget that no longer loads, a booking link
+that leaves their domain entirely, or no way to see availability. The business case is that
+after-hours bookings are the ones a phone-only shop loses, and they never find out they lost them.
+
+**2. Payments and deposits.** Deposits on no-show-prone appointments, online ordering for cafes
+and bakeries, invoices and card payment for trades. Look for: no payment path, cash-only notes,
+a dead payment vendor link, or a PDF price list with no way to act on it.
+
+**3. Ordering, menus and inventory.** Restaurants, cafes, bakeries, florists. A menu published as
+a photograph or a PDF cannot be read by a phone or by search engines, and cannot be changed
+without someone remaking the file. That is a business-logic problem, not a design problem.
+
+**4. Getting found and getting in touch.** Missing or wrong opening hours, no address on the page,
+no map, a contact form with no confirmation, no email published anywhere. Every one of these is a
+customer who wanted to reach them and could not.
+
+**5. Structure and content the business actually needs.** No services page, no prices, no gallery
+for a trade where the work is visual, no reviews on their own site, no page for the one service
+they clearly make most of their money from.
+
+**6. Design and trust.** Dated layout, unreadable type on a phone, stock photography where their
+own work exists, a footer year that is wrong. This lane is real but it is the **weakest opener**
+— lead with it only when nothing above applies, because "your site looks old" is the thing every
+other agency also says.
+
+**7. Build the thing they do not have.** Where the whole category is absent — no online presence
+for a service that clearly needs one — the pitch is the system, not the tweak.
+
+#### The rules that keep this credible
 
 *** EVERY NEGATIVE CLAIM NEEDS ITS OWN PROBE. ***
 
 "There is no contact page" is only true if you fetched `/contact` and got a 404. "There is no
-email" is only true if you looked at the pages where one would be. **Absence is never proven by
-not having seen something.** Shipping a false negative claim to a business owner destroys the
-pitch on first contact and there is no second one.
+online booking" is only true if you looked at the pages where a booking link would be. **Absence
+is never proven by not having seen something.** Shipping a false negative claim to a business
+owner destroys the pitch on first contact and there is no second one.
+
+*** NEVER QUANTIFY WHAT YOU CANNOT MEASURE. *** No "you are losing 30 percent of bookings", no
+"this will increase revenue by X", no invented speed scores, no invented traffic figures. Those
+numbers are the single clearest tell of a mass-mailed template, and one of them in the email
+makes the three true findings above it worthless. **Describe the mechanism, never the magnitude.**
+"People who want to book at 9pm currently have no way to" is true and needs no number attached.
+
+*** NEVER PROPOSE A REBUILD WHEN A FIX WILL DO. *** If their booking widget is simply broken, say
+so. Offering a full rebuild to someone whose site mostly works reads as a sales script, and it is
+the fastest way to be marked as spam.
 
 Two real findings from the 14 August run, for calibration — both checkable by the owner in
 seconds without having to trust Faisal about anything:
@@ -411,20 +541,54 @@ Still banned: `careers@ jobs@ hr@ noreply@ no-reply@ abuse@ webmaster@ postmaste
 One self-contained HTML file per lead, **both categories**, in `/mnt/user-data/outputs`, named
 after the business slug, lowercased and hyphenated.
 
-Everything inline: inline CSS, no external stylesheets, no frameworks, no CDN links, no
-JavaScript beyond what is genuinely needed. **It must render offline.**
+**This page is the entire pitch.** The email exists to get it opened. It is a work sample, so it
+is also an audition: if the page looks like a template with their name pasted in, it proves the
+opposite of what it is meant to prove.
 
-Use their **real** business name, **real** services and **real** city from the audit. Never invent
-a service they do not offer. Show the three problems found and what fixed looks like, honestly
-and specifically. Mobile-first, since the pitch is usually that their current site is not.
-Tasteful and restrained — this is a work sample, so it is also an audition.
+**Full build rules are in `previews/README.md` in this repo. Read that file before writing the
+first page of the run.** The essentials, so they are also here:
+
+Everything inline: inline CSS, no external stylesheets, no frameworks, no CDN links, no
+JavaScript beyond what is genuinely needed. **It must render offline.** No stock photography, no
+invented logos, no fake testimonials, no invented statistics, no countdown or urgency devices.
+
+Use their **real** business name, **real** services, **real** city and **real** opening hours from
+the audit. **Never invent a service they do not offer.**
+
+### The two page types
+
+**Type A — the business has a website.** Structure it as *what I found → what it costs them →
+what it looks like fixed*:
+
+1. One line naming their business and where you looked.
+2. **The three findings**, each with the evidence: the URL, the exact text or the missing element.
+   No adjectives. State the fact.
+3. **The fix, shown rather than described.** If the finding is a missing booking flow, build a
+   working mobile booking form on the page and let them tap through it. If it is a menu locked in
+   a PDF, lay the menu out as real readable HTML. If it is a broken payment link, show the working
+   path. **A page that says "we would add online booking" is a proposal. A page where they can
+   press the button is a demonstration**, and the second one is why this task exists.
+4. A short honest close: what is quick, what is a bigger piece of work.
+
+**Type B — the business has no website.** These are the phone leads, and the page is what Faisal
+sends the moment one of them asks to see something. Structure it as *what a site would actually do
+for this trade*:
+
+1. Their real business name, trade, city, phone and hours, laid out the way a customer would want
+   to find them.
+2. **The two or three systems that matter for that specific trade**, built as working examples on
+   the page. Online booking for a barber. Menu and directions for a cafe. Emergency call-out,
+   service area and licence display for a plumber. Quote request for a cleaner or a landscaper.
+3. A short line on what it would take to build.
+
+Mobile-first in both cases, since a large part of the argument is that their current situation is
+not. Tasteful and restrained.
 
 Small line at the bottom: `Concept prepared by Faisal Hanif - faisalhanif.work`.
 
-Deliver both ways so nothing is lost if one path fails:
-
-- `SendUserFile` with all of the day's HTML files.
-- Commit the same HTML into `previews/<YYYY-MM-DD>/<slug>.html` in this repo.
+**Commit the HTML into `previews/<YYYY-MM-DD>/<slug>.html` in this repo.** That commit is the
+delivery mechanism and the only one — a scheduled run has no way to hand a file to Faisal
+directly, so do not look for one. Confirm the commit landed and name the paths in the packet.
 
 ### Then check the link, before drafting anything
 
@@ -456,8 +620,35 @@ not attempt a workaround and **never put a "From:" line in the body.**
 
 ### Shape
 
-**120 to 160 words. No em dashes anywhere. No attachments, ever** — attachments on cold email are
+**130 to 170 words. No em dashes anywhere. No attachments, ever** — attachments on cold email are
 a serious spam signal, considerably stronger than a link.
+
+Raised from 120–160 on 17 August to make room for the business-impact line below. **It is a
+ceiling, not a target.** A 135-word email that is entirely specific beats a 170-word one padded
+to fill the range.
+
+### The spam test — apply it to every draft before you create it
+
+At 40 sends a day from a domain first used this month, one templated email costs more than one
+skipped lead. **If a draft fails any of these, do not create it. Skip the business and say so in
+the report.**
+
+1. **Would this sentence be false about any other business in the same trade?** If the opening two
+   lines would read the same for any barber in any city, they are not findings, they are a
+   template. Delete and re-audit.
+2. **Is every claim in it something the run actually fetched?** Not inferred, not assumed from the
+   trade, not remembered from another site.
+3. **Are there numbers in it that were not read off their page?** Any invented percentage,
+   revenue figure, traffic estimate or speed score fails outright.
+4. **Is there exactly one call to action?** Two asks in a cold email reads as a funnel.
+5. **Does it contain any of the banned words** in `profile/faisal-outreach-profile.md`? No
+   "excited", "thrilled", "reach out", "leverage", "game-changer", "I hope this email finds you
+   well", "I came across your company".
+6. **Does the opt-out line survive?** It is never dropped for length.
+7. **Is there a real person or a real shop behind the address**, quoted from a page you opened?
+
+A day where four candidates fail this test and eleven ship is a **good** day. The eleven are
+better protected because the four did not go.
 
 **Subject:** specific and plain. `Your booking links on <business>`, `Quick note about <business>
 on mobile`. **Never** "Website redesign" or anything else that reads like a mass mailer.
@@ -467,6 +658,18 @@ whole email; everything after it is supporting material. **If the observation is
 enough that the owner could check it in a minute, the email is not ready.**
 
 **Then** the other two findings, briefly.
+
+**Then one line on what it means for the business, not for the website.** This is the sentence
+that separates an engineer from an agency mailshot, and it is the one thing that changed on
+17 August. Name the mechanism, never a magnitude:
+
+- Good: *"Anyone deciding at nine in the evening has no way to book, so they either ring in the
+  morning or they book somewhere else."*
+- Good: *"The menu is a photograph, so it does not come up in search and you have to remake the
+  image every time a price moves."*
+- **Banned:** *"You are losing 30 percent of bookings."* *"This could double your revenue."*
+  Any invented percentage, speed score, or traffic figure. One of those in the email makes the
+  three true findings above it worthless.
 
 **Then one line offering to fix it**, and this line has two forms:
 
@@ -550,16 +753,23 @@ Short, plain English, no em dashes, in this order:
 1. **The Sent-folder check result** (Step 0a).
 2. **The preflight block** — which tools are alive, which are dead and with what error.
 3. **The ceiling you derived and today's existing draft count**, as numbers.
-4. **The trade and city pairing used.**
-5. **Website category:** screened · rejected and for what · **unreadable, counted separately** ·
-   drafts created · **how many carry a verified link and how many shipped without one** · and for
-   each lead, the three findings **on a single line** so Faisal can sanity-check them quickly.
-6. **Call category:** profiles opened · how many had a genuinely absent website · the three leads
+4. **The deliverability block** — bounces in the last 24 hours, bounce rate, replies. In capitals
+   at the very top of the report if the rate is above 2 percent.
+5. **The trade and city pairings used, per region.**
+6. **Website category:** screened · rejected and for what · **unreadable, counted separately** ·
+   **candidates dropped for failing the spam test, and which numbered check they failed** ·
+   drafts created against the target of 15 and the floor of 10 · **how many carry a verified link
+   and how many shipped without one** · and for each lead, the three findings **and the
+   improvement lane** on a single line so Faisal can sanity-check them quickly.
+7. **The regional split** — how many leads came from US, UK, Canada, Australia and the EU. If a
+   region produced nothing, say which and why, because three barren mornings in a row means the
+   sourcing approach for that region needs changing rather than the region being quietly dropped.
+8. **Call category:** profiles opened · how many had a genuinely absent website · the three leads
    with owner name, phone and **grade**.
-7. **Preview pages generated**, and confirmation both the tracker commit and the packet commit
+9. **Preview pages generated**, and confirmation both the tracker commit and the packet commit
    landed, with row counts before and after.
-8. **Tool health**: total call count against the planned 110 and the absolute 140, the size of any
-   overrun, and one line on why.
+10. **Tool health**: total call count against the planned 230 and the absolute 290, the size of
+    any overrun, and one line on why.
 
 ### Then stop
 
@@ -569,14 +779,17 @@ Short, plain English, no em dashes, in this order:
 
 ## What a good morning looks like
 
-Six or seven website leads and three call leads. Seven is the target and you should pursue it,
-but **never pad to reach it.** Deliver what survives the evidence bar, state the number reached
-against the target, and say why the gap exists.
+Twelve to fifteen website leads spread across the five regions, and three call leads. **15 is the
+target and 10 is the floor.** Pursue 15, but **never pad to reach it.** Deliver what survives the
+evidence bar, state the number reached against the target, and say why the gap exists.
 
-Every finding true. Every address quoted from a page you opened. Every link either verified or
-absent.
+Every finding true. Every improvement proposal specific to that business and that trade. Every
+address quoted from a page you opened. Every link either verified or absent. Every draft through
+the seven-point spam test.
 
-**Four emails that are all true beat seven containing one false claim.**
+**Ten emails that are all true beat fifteen containing one false claim** — and at 40 sends a day
+from a young domain, the false one does not just lose that prospect, it degrades delivery for the
+other fourteen.
 
 ---
 

@@ -12,9 +12,10 @@ email address or a phone number.**
 
 ## The two categories, and why they use different channels
 
-**Category A — the business HAS a website. 7 per day. EMAIL.**
-Audit the site, name three true specific problems, offer improvements, link one preview page
-**only if the run fetched the URL and got HTTP 200.**
+**Category A — the business HAS a website. 15 per day, floor 10. EMAIL.**
+Audit the site, name three true specific problems, say in one line what they cost the business,
+offer the improvement, and link one preview page **only if the run fetched the URL and got HTTP
+200.** Raised from 7 to 15 on 17 August, and spread across five regions rather than US-only.
 
 **Category B — the business has NO website. 3 per day. PHONE, NOT EMAIL.**
 
@@ -33,10 +34,28 @@ ask for something.
 **Do not attempt to email a Category B business. Do not use a relay form. Do not send automated
 SMS** — US TCPA rules on automated texting are far stricter than on email.
 
-## Geography priority
+## Geography — five regions, roughly three leads each
 
-United States first (the search tool is US-only, so yield is best there), then United Kingdom,
-Australia, and EU/EEA.
+Set by Faisal on 17 August. **United States · United Kingdom · Canada · Australia · EU/EEA.**
+Record the split in every report.
+
+WebSearch is US-weighted, so expect one or two extra calls per non-US lead. That is budgeted for
+and is not a reason to quietly fall back to US-only.
+
+- **UK, Ireland, Canada and Australia** are the easiest non-US pools. English-language sites, and
+  small businesses publish a contact address at roughly the same rate as in the US.
+- **EU sites in other languages are in scope and are frequently the best leads**, because almost
+  nobody is cold-emailing them in English about their booking flow. German, Austrian and Dutch
+  sites carry an `Impressum` or `Contact` page with a real published address as a legal
+  requirement, which makes address verification easier there than anywhere else.
+- **Write every email in English.** A machine-translated cold email reads worse than a plain
+  English one, and getting a language subtly wrong is a stronger negative signal than writing in
+  the wrong language on purpose.
+
+**Category B (no website) stays US-only.** The replacement source is YellowPages `/mip/` profiles,
+which is a US directory. Equivalent non-US directories have not been tested from the run
+environment, and an untested source producing three phone numbers a day is not worth the calls
+until someone checks it.
 
 ## The sending cap — THE DOMAIN IS SHARED WITH TASK 1
 
@@ -45,13 +64,24 @@ domain, not per task.** Task 3 runs at 10:00, after Task 1 at 08:00, so it can c
 exists:
 
 ```
-ceiling = min(7, 40 - drafts already created today)
+ceiling = min(15, 40 - drafts already created today)
 ```
 
 **The number is 40, not 30.** An earlier version used 30, which produces zero drafts on every full
 day, silently.
 
+**There is no headroom left.** Task 1 takes up to 25, Task 3 up to 15, so a full day is exactly
+40 against a 40-per-day maximum. Before 17 August it was 20 + 7 = 27, with thirteen spare. The
+subtraction in that formula is therefore mandatory, not defensive: if Task 1 over-ran, Task 3
+absorbs it.
+
 Category B leads are calls and count against **nothing**.
+
+**Both routines print a deliverability block every run** — bounces in the last 24 hours, bounce
+rate, replies. Above 2 percent bounce, the report opens in capitals recommending a volume pause.
+Historically every bounce in this campaign came from a shared inbox and no personal published
+address has ever bounced, so a spike usually means address quality slipped rather than the domain
+being burnt. The run says which it looks like; Faisal decides what to do about it.
 
 **Drafts do not warm a domain. Only sent mail does.** If drafts pile up unsent, do not advance any
 ramp.
@@ -66,15 +96,45 @@ barber · hair salon · coffee shop · cafe · restaurant · dentist · chiropra
 tattoo studio · nail salon · physiotherapy · roofing · cleaning service · driving school ·
 photography studio · med spa
 
-## City rotation (US-first)
+## City rotation — mid-size markets in all five regions
 
+**Mid-size cities deliberately, everywhere.** Large metros are already saturated with agencies
+cold-emailing these businesses; mid-size markets have far less competition for attention. Never
+use London, New York, Toronto, Sydney or Berlin.
+
+**United States**
 Asheville NC · Boise ID · Chattanooga TN · Des Moines IA · Fort Collins CO · Greenville SC ·
 Knoxville TN · Lancaster PA · Madison WI · Missoula MT · Ogden UT · Portland ME · Reno NV ·
 Roanoke VA · Savannah GA · Sioux Falls SD · Spokane WA · Springfield MO · Tallahassee FL ·
 Wichita KS · Wilmington NC · Boulder CO · Bend OR · Charleston SC · Fargo ND
 
-**Mid-size cities deliberately.** Large metros are already saturated with agencies cold-emailing
-these businesses; mid-size markets have far less competition for attention.
+**United Kingdom and Ireland**
+Bath · Bristol · Cambridge · Cheltenham · Chester · Derby · Exeter · Harrogate · Ipswich ·
+Lancaster · Norwich · Oxford · Perth (Scotland) · Plymouth · Shrewsbury · Stirling · Swansea ·
+Truro · Winchester · York · Cork · Galway · Kilkenny · Limerick · Waterford
+
+**Canada**
+Barrie ON · Guelph ON · Halifax NS · Hamilton ON · Kelowna BC · Kingston ON · Kitchener ON ·
+Lethbridge AB · London ON · Moncton NB · Nanaimo BC · Red Deer AB · Regina SK · Saskatoon SK ·
+Sherbrooke QC · St. Catharines ON · Sudbury ON · Thunder Bay ON · Trois-Rivieres QC ·
+Victoria BC · Waterloo ON · Whitby ON · Windsor ON · Kamloops BC · Charlottetown PE
+
+**Australia and New Zealand**
+Ballarat VIC · Bendigo VIC · Cairns QLD · Coffs Harbour NSW · Darwin NT · Geelong VIC ·
+Hobart TAS · Launceston TAS · Mackay QLD · Newcastle NSW · Rockhampton QLD · Toowoomba QLD ·
+Townsville QLD · Wagga Wagga NSW · Wollongong NSW · Bunbury WA · Albury NSW · Dubbo NSW ·
+Hamilton NZ · Tauranga NZ · Dunedin NZ · Napier NZ · Palmerston North NZ · Nelson NZ ·
+Queenstown NZ
+
+**EU and EEA**
+Ghent BE · Bruges BE · Leuven BE · Groningen NL · Eindhoven NL · Haarlem NL · Maastricht NL ·
+Aarhus DK · Odense DK · Bergen NO · Trondheim NO · Uppsala SE · Malmo SE · Tampere FI ·
+Turku FI · Graz AT · Salzburg AT · Innsbruck AT · Freiburg DE · Heidelberg DE · Munster DE ·
+Regensburg DE · Porto PT · Coimbra PT · Girona ES · San Sebastian ES · Bologna IT · Verona IT
+
+**Note on the EU block:** an `Impressum` page is legally required in Germany and Austria and
+almost always carries a real published email address. Start there when the EU slot is proving
+hard to fill.
 
 ## The list
 
@@ -106,7 +166,7 @@ again. See the repo README for what to do about them.
 
 | Source | Status | Use |
 |---|---|---|
-| WebSearch (trade + city) | **WORKS**, US-only | Primary Category A discovery |
+| WebSearch (trade + city) | **WORKS**, US-weighted but returns non-US results | Primary Category A discovery, all five regions |
 | The business's own website | **WORKS** | The audit, and where the published email is found |
 | BBB profiles (bbb.org) | **DEAD as of 14 August — `PROVENANCE_REQUIRED` on every URL** | Was the primary Category B source. See below. **Do not spend calls on it.** |
 | YellowPages `/mip/` profiles | **WORKS**, with two traps | Replacement Category B source: phone, address, years in business, sometimes an owner name |
@@ -163,8 +223,8 @@ Because the no-website test is weaker now, every Category B row carries a grade:
 ## Preview pages
 
 Every lead in **both** categories gets a self-contained HTML preview page using their real business
-name, real services and the specific problems found. Committed to `previews/<date>/` in this repo
-and delivered with `SendUserFile`.
+name, real services and the specific problems found. **Committed to `previews/<date>/` in this
+repo — that commit is the delivery mechanism.** Build rules are in `previews/README.md`.
 
 **The email carries ONE link, never an attachment** — attachments on cold email are a serious spam
 signal, stronger than links.

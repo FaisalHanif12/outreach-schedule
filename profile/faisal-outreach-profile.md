@@ -46,28 +46,63 @@ the outreach address is never put on a CV.** The Gmail has years of sending repu
 `faisalhanif.work` domain is new and its inbound depends on a forwarding service. A missed
 interview invitation costs far more than a smarter-looking address gains.
 
-## The domain sending ceiling — 40 per day, shared
+## The domain sending ceiling — 40 per day, shared, and now fully used
 
 Both routines draft from the same domain, and Gmail reputation is per domain, not per task.
 
 ```
-Task 1 (08:00) takes up to 20.
-Task 3 (10:00) takes min(7, 40 - drafts already created today).
+Task 1 (08:00) takes up to 25.   target 25, floor 15
+Task 3 (10:00) takes min(15, 40 - drafts already created today).   target 15, floor 10
 ```
 
 **The number is 40, not 30.** An earlier version used 30, which produces zero Task 3 drafts on
 every full day, silently. If the arithmetic comes out at zero or less, Task 3 creates no email
 drafts, says so plainly, and still delivers its three call leads, which count against nothing.
 
+### What changed on 17 August, and the risk that came with it
+
+Faisal raised the targets from 20 and 7 to **25 and 15**. That is 40 exactly, against a
+40-per-day maximum. Before, it was 27 with thirteen spare.
+
+**This was his call, made knowing the trade, and the routines implement it. But the risk is real
+and is written here so nobody has to rediscover it:**
+
+`faisalhanif.work` was first used for sending in August 2026. It has been doing roughly 11 to 30
+a day. Going to a hard 40 every day, on cold outreach, from a domain that young, is the profile
+that gets mail quietly filtered rather than bounced — and quietly is the problem, because nothing
+in the pipeline can see a spam-folder placement.
+
+Two things follow, and both are now mandatory in the routine files rather than advisory:
+
+1. **The subtraction in Task 3's formula is not optional.** If Task 1 over-ran, Task 3 absorbs it.
+   Neither task may exceed its own number for any reason.
+2. **Both routines print a deliverability block every run** — bounces in the last 24 hours, the
+   bounce rate, and replies. **Above 2 percent bounce, the report opens in capitals recommending a
+   volume pause.** The run never changes the target itself; that stays Faisal's decision. It just
+   makes the number impossible to miss.
+
+The useful baseline: **every bounce this campaign has ever produced came from a shared inbox, and
+no personal address published for a named person has ever bounced.** So a bounce spike almost
+certainly means address quality slipped, not that the domain is burnt. The reports are told to say
+which it looks like.
+
 **Drafts do not warm a domain. Only sent mail does.** If drafts pile up unsent, the ramp does not
-advance.
+advance — and at 40 a day, unsent drafts accumulate fast enough to be worth watching.
 
-## Positioning — Faisal approved this on 5 August 2026, use it as written
+## Positioning — the facts, not the email copy
 
-> Three years shipping production web and mobile systems in React, Next.js, Node and React
-> Native, plus AI features on top of them.
+**The exact wording that goes in a Task 1 email is fixed inside
+`task-1-startup-outreach/ROUTINE-INSTRUCTIONS.md` and that file is authoritative.** What follows
+is the underlying claim, for reference and for the concept pages.
+
+> Three years shipping production web and mobile systems, plus AI features on top of them.
 
 Named proof point, when one is needed: **PureBody**, an AI fitness app live on Google Play.
+
+**The Task 1 email never names a framework or a language.** No React, Next.js, Node, TypeScript
+or AWS in the body. General capability attracts more founder interest than a stack list, and a
+stack list in a cold email reads as a CV. The stack belongs on the CV and the portfolio, not in
+the first two hundred words a stranger reads.
 
 **Do not resurrect the "four years" version.** The 6 August run used an older paragraph that said
 four years, which is both wrong and was not what he approved.
@@ -108,10 +143,11 @@ Never on a fragment.
 
 ## Campaign calibration — what the numbers actually look like
 
-65 sent 2 Aug (4 bounces) · 29 on 4 Aug (1 bounce) · 57 drafted later that day · 30 on 6 Aug ·
-26 on 7 Aug · 11 on 14 Aug against a target of 20.
+65 sent 2 Aug · 29 on 4 Aug · 57 drafted later that day · 30 on 6 Aug · 26 on 7 Aug ·
+11 on 14 Aug against a target of 20.
 
-**~230 contacts have produced two human replies, one out-of-office and five bounces.**
+**~230 contacts have produced three human replies, one out-of-office and five bounces**, the
+bounces dated 2 August (two), 4 August (two) and 6 August (one).
 
 Every bounce came from a shared inbox. **No personal address published for a named person has
 ever bounced.** That is the entire justification for the personal-address rule.

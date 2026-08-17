@@ -51,7 +51,7 @@ that occasionally exists, never as a foundation.
 === WHERE EVERYTHING LIVES — this repository is the memory ===
   state/do-not-contact.md            THE suppression list. Authoritative. Shared with task 3.
   profile/faisal-outreach-profile.md identity, sending address, the FIXED email copy
-  daily/                             write your run report here as outreach-<YYYY-MM-DD>.md
+  daily/                             write your run report here as task-1-<YYYY-MM-DD>.md
 
 You have git. APPEND rows and make TARGETED EDITS. Never rewrite a whole state file to add rows.
 The old version of this task wrote through a document store that replaced the entire file on
@@ -98,34 +98,53 @@ B) REJECTED vs UNREADABLE. Rejected means you OPENED the page and it failed a fi
    FAILED RUN, not a thin day."
 C) A RESEARCH TOOL FAILING IS NOT A STOP CONDITION. Fall down the chain and finish.
 
-=== TARGET: 20 DRAFTS ===
-FOLLOW-UPS COME FIRST, up to 5. New first-touch emails take the remainder, so 15 on a normal day.
+=== TARGET: 25 DRAFTS. FLOOR: 15. ===
+FOLLOW-UPS COME FIRST, up to 5. New first-touch emails take the remainder, so 20 on a normal day.
 Follow-ups are cheap, need no research, and are where replies actually come from. IF THE RUN RUNS
 SHORT IT CUTS NEW COMPANIES AND NEVER CUTS FOLLOW-UPS.
 
 Do not build a warm-up ladder that computes a tier from a count of distinct sending dates. Faisal
-set 20 directly; the ladder contradicts that and was a source of bugs on its own. The remaining
-constraint is the sending domain: task 3 runs two hours later from the same address and takes up
-to 7 more, so 20 + 7 = 27 against a 40-per-day domain maximum. You do not need to account for the
-other task. Stay inside your own 20.
+set 25 directly on 17 August; the ladder contradicts that and was a source of bugs on its own.
 
-=== BUDGET: PLANNED 180 TOOL CALLS, ABSOLUTE CEILING 225 ===
-Work to 180. Spend it in this order so running out never costs the most valuable work:
+THE DOMAIN IS NOW AT ITS CEILING WITH NO HEADROOM. Task 3 runs two hours later from the same
+address and takes up to 15, so 25 + 15 = 40 against a 40-per-day domain maximum. Exactly 40, not
+27 as before. You do not need to account for the other task — stay inside your own 25 and the
+arithmetic holds. But because there is no slack left, TWO THINGS BECOME MANDATORY RATHER THAN
+NICE TO HAVE:
+
+  1. NEVER CREATE A 26TH DRAFT, for any reason, including "one address was so good it seemed
+     worth it". Over-running here silently steals Task 3's allocation two hours later.
+  2. REPORT THE BOUNCE ARITHMETIC EVERY RUN (see the report section). At 40 sends a day on a
+     domain this new, a bounce rate above 2 percent is an early warning that the domain is being
+     scored as bulk. That is the number that decides whether this volume is sustainable, and
+     nobody can see it unless the run prints it.
+
+25 is a target, not a quota. THE FLOOR IS 15. Delivering 17 real, verified, personally-addressed
+drafts is a good morning. Delivering 25 by relaxing anything is a bad one.
+
+=== BUDGET: PLANNED 230 TOOL CALLS, ABSOLUTE CEILING 280 ===
+Raised from 180/225 on 17 August, alongside the target going from 20 to 25. The arithmetic: about
+eight to nine calls go into each *delivered* new draft once rejected candidates are counted, and
+the target went from 15 new companies to 20. Leaving the budget at 180 would have produced a run
+that systematically ran out at draft eighteen and reported a failure that was really an
+under-resourcing. That exact mistake was made once already, on Task 3's original 70-call budget.
+
+Work to 230. Spend it in this order so running out never costs the most valuable work:
 ~20 for the preflight, the reads and the exclusion sets; ~25 for the follow-ups; the remainder on
 sourcing and email verification; and TEN CALLS HELD BACK, ALWAYS, for the audit and the
 suppression-list write.
 
-If you reach 180 and are STILL SHORT OF 20 DRAFTS you may continue to 225 — but only on calls
+If you reach 230 and are STILL SHORT OF 25 DRAFTS you may continue to 280 — but only on calls
 that will plausibly close the gap: sourcing a candidate, verifying an address, creating a draft.
 NOT on retrying something that already failed, not on re-reading a page, not on a line of enquiry
-that has produced nothing. 225 IS ABSOLUTE AND IS NEVER CROSSED FOR ANY REASON. Keep the ten-call
+that has produced nothing. 280 IS ABSOLUTE AND IS NEVER CROSSED FOR ANY REASON. Keep the ten-call
 reserve either way.
 
 *** THE OVERRUN BUYS MORE WORK, NEVER A LOWER BAR. *** It does not permit a guessed address, an
-unverified claim, a relaxed filter, a shortened audit, or a shared inbox waved through. If 20
+unverified claim, a relaxed filter, a shortened audit, or a shared inbox waved through. If 25
 cannot be reached without lowering the evidence bar, DELIVER SHORT AND SAY SO — that is a correct
-outcome and the entire reason this pipeline is worth running. Twenty drafts where two addresses
-were invented is worse than eleven where none were.
+outcome and the entire reason this pipeline is worth running. Twenty-five drafts where two
+addresses were invented is worse than eleven where none were.
 Report the planned budget, the actual count, and any overrun with a one-line reason. IF YOU
 OVERRUN THREE DAYS RUNNING, SAY SO PLAINLY — that means the target or the method needs
 revisiting, not that the budget should quietly creep upward.
@@ -176,7 +195,9 @@ the project's memory. Seven columns in THIS EXACT ORDER:
     | company_domain | email_domain | company | person | email | date | status |
 
 A correct row:
-| onlook.dev | onlook.dev | Onlook | Daniel Farrell | daniel@onlook.dev | 2026-08-09 | drafted |
+| examplestartup.dev | examplestartup.dev | Example Startup | Jane Doe | jane@examplestartup.dev | 2026-08-18 | drafted |
+
+(That row is a shape illustration only. Do not copy any part of it into the file.)
 
 company_domain COMES FIRST. An earlier version listed ten fields in a different order; writing
 that would have put person names into the domain column and built the next morning's duplicate
@@ -205,7 +226,7 @@ Skip the whole row and you silently UN-BLOCK fourteen companies contacted days a
 Split the cell on commas, ignore case and bracketed text. A person is contactable ONLY IF EVERY
 TOKEN is `drafted` or `sent`. If even one token is anything else, that person is PERMANENTLY
 BLOCKED — no new email and no follow-up.
-Measured 13 August: 256 rows, 8 compound — five `sent, FOLLOWED_1`, one `sent, SEQUENCE_DONE`,
+Measured 13 August: 256 rows, 8 compound — five `sent, FOLLOWED_1_DRAFTED`, one `sent, SEQUENCE_DONE`,
 one `sent, REPLIED (declined, in-person only)`, one `sent, REPLIED (declined)`, plus five
 single-token `BOUNCED`. A test asking whether the status CONTAINS "sent" passes all eight, which
 would have sent a second follow-up to five founders and re-emailed Christophe Kafrouni at
@@ -405,12 +426,14 @@ LOOK IN THIS ORDER, which is the order that actually produced results:
   3. The founder's personal site, conference speaker pages, podcast notes, press releases.
   4. YC launch posts, which often end with "contact us at name@company.com".
 
-ONE DEAD END, so nobody spends calls rediscovering it: GITHUB MAY NOT BE AVAILABLE FOR EMAIL
-DISCOVERY. In the previous environment both api.github.com and github.com returned "GitHub access
-to this repository is not enabled for this session", and the atom feeds were ROBOTS_DISALLOWED —
-so the old advice about opening a commit as a .patch URL and reading the From: header could not
-work. Test it ONCE in this environment, note the result under tool health, and move on either
-way. Do not keep retrying.
+ONE THING TO TEST RATHER THAN ASSUME: GITHUB COMMIT HEADERS. When it works this is the single
+best source for open-source founders — ten of the twenty-six addresses found on 7 August came
+from it. Fetch https://api.github.com/repos/OWNER/REPO/commits and read the author email, or open
+a commit as a .patch URL. Skip anything ending users.noreply.github.com.
+BUT in the PREVIOUS environment both api.github.com and github.com returned "GitHub access to
+this repository is not enabled for this session" and the atom feeds were ROBOTS_DISALLOWED. This
+environment is different and may well allow it. TEST IT ONCE, note the result under tool health,
+and move on either way. Do not keep retrying if it fails.
 
 RECORD for each address: the source URL, a one-line note on how it appeared, and a confidence of
 HIGH (published for that exact person) or MEDIUM (a company address at a tiny team that clearly
@@ -485,7 +508,7 @@ above. You have git, so APPEND — do not rewrite the file.
 
 WRITE WHAT ACTUALLY HAPPENED, NOT WHAT WAS INTENDED. An audit on 13 August found drift in BOTH
 directions: 26 rows dated 7 August still reading `drafted` when Gmail showed all 26 in Sent, and
-5 rows dated 13 August reading `sent, FOLLOWED_1` when those follow-ups were still unsent drafts.
+rows reading `sent, FOLLOWED_1_DRAFTED` whose follow-ups may still be unsent drafts (10 today).
 DO NOT PROMOTE A DRAFT TO `sent`. Use FOLLOWED_1_DRAFTED when the follow-up is only drafted, and
 say so in the report.
 
@@ -521,7 +544,7 @@ TWO SPECIFICS:
 - A RESEARCH TOOL FAILING IS NOT A STOP CONDITION. Fall down the chain and finish.
 
 === STEP 8 — REPORT. Short, plain English, no em dashes. ===
-Write it to daily/outreach-<YYYY-MM-DD>.md AND output it. In this order:
+Write it to daily/task-1-<YYYY-MM-DD>.md AND output it. In this order:
   a) The Sent-folder check result from step 0a
   b) The preflight block: which tools ALIVE, which DEAD with the exact error
   c) Row counts and the three set sizes
@@ -529,9 +552,18 @@ Write it to daily/outreach-<YYYY-MM-DD>.md AND output it. In this order:
   e) New companies: screened / unreadable / rejected for no remote evidence / rejected for no
      published address / drafts created / skipped as already contacted
   f) Shared-inbox NEAR MISSES with their addresses
-  g) Which daily total you applied and the split
-  h) Anything unusual you assumed
-  i) Tool health
-  j) Budget: total calls against the planned 180 and the absolute 225, the size of any overrun
+  g) Which daily total you applied and the split, against the target of 25 and the floor of 15
+  h) THE DELIVERABILITY BLOCK. Three numbers, every run, no exceptions:
+       - bounces found in the inbox in the last 24 hours, and the addresses
+       - bounce rate as a percentage of the last 100 rows marked sent in state/do-not-contact.md
+       - replies received in the last 24 hours
+     IF THE BOUNCE RATE IS ABOVE 2 PERCENT, open the whole report IN CAPITALS with
+     "DELIVERABILITY WARNING: BOUNCE RATE N PERCENT. RECOMMEND PAUSING VOLUME." Do not change
+     the target yourself — that is Faisal's decision — but make the number impossible to miss.
+     At 40 sends a day across the two tasks the domain has no slack left, and a rising bounce
+     rate is the only early signal that exists before mail starts landing in spam.
+  i) Anything unusual you assumed
+  j) Tool health
+  k) Budget: total calls against the planned 230 and the absolute 280, the size of any overrun
      with a one-line reason, how many subagents were spawned and what each was given
 Then commit and stop. Do not send anything.

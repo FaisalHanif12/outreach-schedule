@@ -21,8 +21,8 @@ first scheduled run:
 
 - Mark `mark@hugentic.ai` as `REPLIED` in `state/do-not-contact.md`. He replied at 13:04 UTC on
   14 August and the follow-up logic will otherwise reach him eventually.
-- Reconcile the 26 rows dated 7 August that read `drafted` against Gmail Sent, plus the 5 rows
-  reading `sent, FOLLOWED_1` whose follow-ups were never actually sent.
+- Reconcile the 25 rows dated 7 August that read `drafted` against Gmail Sent, plus the 10 rows
+  reading `sent, FOLLOWED_1_DRAFTED` whose follow-ups may never have been sent.
 
 ---
 
@@ -95,9 +95,14 @@ Then open Gmail and look at the drafts before sending any of them.
 
 ## What "a good morning" looks like
 
-Around 20 drafts: five follow-ups and fifteen new companies. Sometimes fewer new ones, because
-the hit rate from screened company to verified contactable founder is roughly 6 percent and some
-mornings the pool is thin.
+**Target 25, floor 15.** Five follow-ups and twenty new companies on a full morning. Sometimes
+fewer new ones, because the hit rate from screened company to verified contactable founder is
+roughly 6 percent and some mornings the pool is thin.
+
+**Read the deliverability block first.** Three numbers — bounces in the last 24 hours, bounce
+rate, replies. Task 1 and Task 3 together now use the domain's full 40-a-day ceiling, so that
+bounce rate is the only early signal that the volume is sustainable. Above 2 percent, the report
+will open in capitals telling you so.
 
 **A thin day where every address is real is a success. A full day with one invented address is a
 failure.** The report is written to make that distinction visible — it separates *rejected*

@@ -23,8 +23,13 @@ suppression_rows_read:
 freemail_rows_seen:
 
 follow_ups_drafted:              /5
-new_companies_drafted:           /15
-total_drafts:                    /20
+new_companies_drafted:           /20
+total_drafts:                    /25   (floor 15)
+
+## Deliverability — READ THIS FIRST
+bounces_last_24h:
+bounce_rate_last_100_sent:       %     (>2% = open report in CAPITALS)
+replies_last_24h:
 
 companies_screened:
 rejected_shared_inbox_only:
@@ -40,7 +45,7 @@ UNREADABLE (counted separately):
 ## Near misses worth keeping
 (company, what it failed on, and what would reinstate it)
 
-tool_calls:                      / 180 planned / 225 absolute
+tool_calls:                      / 230 planned / 280 absolute
 overrun_reason:
 ```
 
@@ -52,16 +57,27 @@ overrun_reason:
 sent_check:                      clean / N MESSAGES FOUND
 preflight:
 existing_drafts_today:
-ceiling_derived:                 min(7, 40 - N) =
-trade_city_pairing:
+ceiling_derived:                 min(15, 40 - N) =
+trade_city_pairings:             US / UK / CA / AU / EU
+
+## Deliverability — READ THIS FIRST
+bounces_last_24h:
+bounce_rate_last_50_sent:        %     (>2% = open report in CAPITALS)
+replies_last_24h:
 
 ## Website leads
 screened:
 rejected:
+dropped_on_spam_test:            (and which numbered check failed)
 UNREADABLE (counted separately):
-drafts_created:                  /7
+drafts_created:                  /15   (floor 10)
   with a verified link:
   shipped without a link:        slugs needing upload:
+
+## Regional split
+US:      UK:      CA:      AU:      EU:
+(a region at zero three mornings running means its sourcing needs changing,
+ not that the region gets quietly dropped)
 
 ## Call leads
 profiles_opened:
@@ -72,7 +88,7 @@ delivered:                       /3
 
 preview_pages_generated:
 tracker_rows_before / after:
-tool_calls:                      / 110 planned / 140 absolute
+tool_calls:                      / 230 planned / 290 absolute
 overrun_reason:
 ```
 

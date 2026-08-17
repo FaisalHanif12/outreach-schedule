@@ -8,11 +8,12 @@ Two scheduled email-outreach Routines for **M Faisal Hanif**, run on Claude Code
 | | Task 1 | Task 3 |
 |---|---|---|
 | **Folder** | `task-1-startup-outreach/` | `task-3-local-business/` |
-| **Purpose** | Find small startups hiring engineers remotely, verify a real published address for a named technical decision-maker, draft outreach | Audit small local business websites, draft a specific fix-offer; businesses with no site become phone leads |
-| **Sells** | Faisal as a remote engineer | Faisal's web design and development services |
+| **Purpose** | Find small startups hiring engineers remotely, verify a real published address for a named technical decision-maker, draft outreach | Audit small local business websites, draft a specific fix-offer with a working concept page; businesses with no site become phone leads |
+| **Sells** | Faisal as a remote engineer | Faisal's software engineering — booking systems, payments, ordering, rebuilds |
+| **Region** | Worldwide-remote startups | US · UK · Canada · Australia · EU (email). US only (phone) |
 | **Runs** | 08:00 Karachi (`0 3 * * *` UTC) | 10:00 Karachi (`0 5 * * *` UTC) |
-| **Produces** | 20 Gmail drafts — 5 follow-ups first, 15 new | 7 email drafts + 3 call leads |
-| **Budget** | 180 planned / 225 absolute | 110 planned / 140 absolute |
+| **Produces** | **25** Gmail drafts — 5 follow-ups first, 20 new. Floor 15 | **15** email drafts + 3 call leads. Floor 10 |
+| **Budget** | 230 planned / 280 absolute | 230 planned / 290 absolute |
 
 **Neither task ever sends. Both create drafts only. Faisal presses Send himself.**
 
@@ -58,7 +59,7 @@ guarded with prose instead of a mechanism.**
 
 ### 3. Status is an ALL test, never a CONTAINS test
 
-Both trackers use compound statuses like `sent, FOLLOWED_1` and `sent, REPLIED (declined)`.
+Both trackers use compound statuses like `sent, FOLLOWED_1_DRAFTED` and `sent, REPLIED (declined)`.
 A person is contactable only if **every** comma-separated token permits contact.
 
 Measured against the real file on 13 August: 256 rows, of which 8 were compound. A test asking
@@ -100,32 +101,50 @@ daily/                                     one run report per task per day
 ## The sending-volume arithmetic, which couples the two tasks
 
 Both draft from the **same address**, `faisal@faisalhanif.work`, against a **40-per-day domain
-maximum**. Task 1 runs first and takes up to 20. Task 3 runs two hours later and takes the
-**smaller of 7 and (40 minus today's existing drafts)**.
+maximum**. Task 1 runs first and takes up to **25**. Task 3 runs two hours later and takes the
+**smaller of 15 and (40 minus today's existing drafts)**.
 
 **The number in that arithmetic is 40, not 30.** An earlier version used 30, which produces zero
 drafts on every full day, silently. If the arithmetic comes out at zero or less, Task 3 creates
 no email drafts, says so plainly, and **still delivers the three call leads**, which count
 against nothing.
 
+### 25 + 15 = 40 exactly. There is no headroom left.
+
+Raised from 20 and 7 on 17 August at Faisal's instruction. Two things become mandatory as a
+result, and both are implemented in the routine files rather than left as advice:
+
+- **Neither task may exceed its own number, for any reason.** Task 1 never creates a 26th draft;
+  Task 3 never creates a 16th. Over-running in Task 1 silently steals Task 3's allocation two
+  hours later, which is exactly what the subtraction term exists to absorb.
+- **Both routines print a deliverability block every run**: bounces in the last 24 hours, the
+  bounce rate, and replies. **Above 2 percent bounce, the report opens in capitals recommending a
+  volume pause.** The run never changes the target itself.
+
+Worth being plain about the risk: `faisalhanif.work` first sent in August and has been running at
+11 to 30 a day. A hard 40 every day of cold outreach from a domain that young is the profile that
+gets filtered rather than bounced, and filtering is invisible from inside the pipeline. The
+bounce-rate block is the only early warning that exists. **Read it first, every morning.**
+
 ## Open items this repo inherits
 
-- **An unread reply from `mark@hugentic.ai`**, 13:04 UTC on 14 August — only the second genuine
-  reply this campaign has produced. **Mark that person `REPLIED` before the first scheduled run**,
+- **An unread reply from `mark@hugentic.ai`**, 13:04 UTC on 14 August — the third genuine reply
+  this campaign has produced. **Mark that person `REPLIED` before the first scheduled run**,
   or the follow-up logic will eventually reach them.
-- **Status drift.** A 13 August audit found 26 rows dated 7 August reading `drafted` when Gmail
-  showed all 26 in Sent, and 5 rows reading `sent, FOLLOWED_1` when those follow-ups were still
-  unsent drafts. A one-off reconciliation against Gmail Sent before the first run is worth doing.
+- **Status drift.** A 13 August audit found the 7 August rows reading `drafted` when Gmail showed
+  them in Sent — 25 such rows remain today. Separately, 10 rows read `sent, FOLLOWED_1_DRAFTED`,
+  meaning a follow-up draft exists that may never have been sent. A one-off reconciliation against Gmail Sent before the first run is worth doing.
 - **Four businesses hold emails with dead links** — carvingrockkitchen, goodmancoffeeroasters,
   federalbakeshop, butterthebread. Either upload the four pages retroactively or send a short
   correction. The HTML is preserved in the old project doc `claude/preview-pages-2026-08-14.md`.
 
 ## Campaign calibration
 
-65 sent 2 Aug (4 bounces) · 29 on 4 Aug (1 bounce) · 57 drafted later that day · 30 on 6 Aug ·
-26 on 7 Aug (every address personal) · 11 on 14 Aug against a target of 20.
+65 sent 2 Aug · 29 on 4 Aug · 57 drafted later that day · 30 on 6 Aug · 26 on 7 Aug (every
+address personal) · 11 on 14 Aug against a target of 20.
 
-**~230 contacts have produced two human replies, one out-of-office and five bounces.** Every
+**~230 contacts have produced three human replies, one out-of-office and five bounces.** The five
+bounces are dated 2 August (two), 4 August (two) and 6 August (one). Every
 bounce came from a shared inbox; no personal address published for a named person has ever
 bounced. The first reply was a polite no from a founder who hires in person only — counted as a
 success, because it is what exposed the missing remote filter.

@@ -13,24 +13,31 @@ shared and is not repeated here.
 | **Repository** | this repo, `main` | Reads and writes `state/local-business-leads.md`, commits previews to `previews/` and the packet to `daily/`. |
 | **Instructions** | paste `task-3-local-business/ROUTINE-INSTRUCTIONS.md` **in full** | The ban block must be in context before the toolbelt is assembled. Do not replace it with a pointer. |
 | **Schedule** | `0 5 * * *` | UTC. Faisal is UTC+5 with no daylight saving, so **10:00 Karachi**. |
-| **Model** | **Sonnet** | Same reasoning as Task 1. The 110-call budget is sized for Sonnet. |
+| **Model** | **Sonnet** | Same reasoning as Task 1. The 230-call budget is sized for Sonnet. |
 | **Connectors** | **Gmail only** | Not Vibe Prospecting, which charges real money. Not Drive, not Calendar. |
 | **Auto-fix pull requests** | **OFF** | |
 
 ## The two-hour gap is load-bearing, not cosmetic
 
-Task 3 derives its email ceiling as `min(7, 40 - drafts already created today)`. That arithmetic
+Task 3 derives its email ceiling as `min(15, 40 - drafts already created today)`. That arithmetic
 only works if **Task 1 has already finished and its drafts exist** when Task 3 counts them.
 
-`0 3 * * *` and `0 5 * * *`. Two hours. **If you ever move Task 1, move Task 3 with it.** If they
-overlap, Task 3 counts an empty Drafts folder, takes its full seven, and the domain can end up
-over the ceiling on a day Task 1 also hit twenty.
+`0 3 * * *` and `0 5 * * *`. Two hours. **If you ever move Task 1, move Task 3 with it.**
+
+If they overlap, Task 3 counts a Drafts folder that Task 1 has not filled yet, so the subtraction
+returns its full fifteen no matter what Task 1 did. On a clean day that still lands on exactly 40.
+On any day Task 1 over-ran, or ran twice, or a manual trigger doubled it, nothing catches it.
+
+That mattered less at 20 + 7 = 27 against 40, where thirteen spare absorbed the mistake. **At
+25 + 15 = 40 the subtraction is the only safety net there is**, so the gap is now doing real work
+rather than being tidy.
 
 ## Before the first run
 
 **Verify the tracker is in the repo and readable.** `state/local-business-leads.md` should have
-seven rows under `## The list` — four Category A (all `drafted`, all Chattanooga, 14 August) and
-three Category B (all `queued`, Knoxville). If it does not read, the routine stops, by design.
+seven rows under `## The list` — four Category A (all `drafted`, greater Chattanooga TN,
+14 August) and three Category B (all `queued`, Knoxville TN). If it does not read, the routine
+stops, by design.
 
 **Decide what to do about the four dead links.** carvingrockkitchen, goodmancoffeeroasters,
 federalbakeshop and butterthebread are holding emails pointing at pages that 404. The HTML for all
@@ -57,7 +64,7 @@ Trigger one run manually and read the report before letting it run on schedule. 
    call spent on it is wasted.
 4. **Every Category B lead carries a grade**, 1 or 2, and the grade-2 ones explain the
    `*.localsearch.com` reasoning.
-5. **Open two of the seven website leads yourself and check the three findings.** This is the
+5. **Open three of the fifteen website leads yourself and check the three findings.** This is the
    single most valuable check for the first two weeks. Every finding is a claim made to a stranger
    about their own business, and one false claim loses the prospect permanently.
 6. **The git diff on `state/local-business-leads.md` is an append.** Rows added, none removed.
@@ -66,7 +73,16 @@ Then open Gmail and read the drafts before sending any.
 
 ## What "a good morning" looks like
 
-Seven email drafts and three call leads. Realistically six or seven emails on a good day.
+**Target 15 email drafts and 3 call leads. Floor 10.** The fifteen spread across the five regions
+— US, UK, Canada, Australia and the EU — roughly three each.
+
+Each email carries three true findings **plus one line on what they cost the business**, and each
+lead gets a concept page that demonstrates the fix rather than describing it. Check the report's
+regional split: if one region produces nothing three mornings running, the sourcing approach for
+it needs changing rather than the region being quietly dropped.
+
+**Read the deliverability block first** — bounces, bounce rate, replies. At 25 + 15 the domain is
+at its full 40-a-day ceiling with no slack, so that number is the only early warning that exists.
 
 **A thin day where every finding is true is a success.** The report separates *rejected* (read the
 page, failed a filter) from *unreadable* (never got the page), and opens with `TOOLING DEGRADED`
